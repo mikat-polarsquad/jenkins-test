@@ -1,7 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        label 'kube-slave01'
+    }
 
-    node('kube-slave01') {
+    // node('kube-slave01') {
         stages {
             stage('Build') {
                 steps {
@@ -22,5 +24,5 @@ pipeline {
             //     }
             // }
         }
-    }
+    // }
 }
