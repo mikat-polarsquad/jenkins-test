@@ -8,13 +8,14 @@ pipeline {
             stage('Build') {
                 steps {
                     echo 'Building..'
-                    sh 'sleep 30'
+                    sh 'sleep 5'
                 }
             }
             stage('Test') {
                 steps {
                     echo 'Testing ECR..'
-                    sh 'aws ecr list-images --repository-name jenkins-blueocean'
+                    sh 'docker image inspect 118224663706.dkr.ecr.eu-central-1.amazonaws.com/jenkins-blueocean:1.17.0'
+                    // sh 'aws ecr list-images --repository-name jenkins-blueocean'
                 }
             }
             // stage('Deploy') {
