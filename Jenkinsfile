@@ -15,12 +15,12 @@ pipeline {
                     sh 'sleep 30'
                 }
             }
-            stage('Deploy') {
-                steps {
-                    echo 'Deploying....'
-                    sh 'sleep 30'
-                }
-            }
+            // stage('Deploy') {
+            //     steps {
+            //         echo 'Deploying....'
+            //         sh 'sleep 30'
+            //     }
+            // }
         }
     }
 }
