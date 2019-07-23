@@ -13,8 +13,8 @@ pipeline {
             }
             stage('Test') {
                 steps {
-                    echo 'Testing..'
-                    sh 'sleep 30'
+                    echo 'Testing ECR..'
+                    sh 'aws ecr list-images --repository-name jenkins-blueocean'
                 }
             }
             // stage('Deploy') {
