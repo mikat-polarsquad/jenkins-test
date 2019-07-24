@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'kube-slave01'
+        label 'kube-slave02'
     }
 
     // node('kube-slave01') {
@@ -15,6 +15,7 @@ pipeline {
                 steps {
                     echo 'Testing ECR..'
                     sh 'pwd'
+                    sh 'docker --version'
                     // sh 'aws ecr list-images --repository-name jenkins-blueocean'
                 }
             }
