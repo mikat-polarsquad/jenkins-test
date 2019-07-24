@@ -15,7 +15,7 @@ pipeline {
                 steps {
                     echo 'Testing ECR..'
                     sh 'pwd'
-                    sh 'docker --version'
+                    // sh 'docker --version'
                     // sh 'aws ecr list-images --repository-name jenkins-blueocean'
                 }
             }
