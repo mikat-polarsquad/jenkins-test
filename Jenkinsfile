@@ -1,14 +1,17 @@
 pipeline {
     agent {
-        label 'kube-slave02'
+        label 'kube-slave01'
     }
 
     // node('kube-slave01') {
         stages {
             stage('Build') {
-                steps {
-                    echo 'Building..'
-                    sh 'sleep 5'
+                container('custom') {
+                    steps {
+                        echo 'Building..'
+                        sh 'docker --version'
+                        sh 'sleep 5'
+                    }
                 }
             }
             stage('Test') {
