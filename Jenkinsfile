@@ -18,7 +18,7 @@ node('kube-slave01') {
                             // steps {
                                 echo 'Building..'
                                 sh 'printenv'
-                                sh 'echo $(env.BRANCH_NAME)'
+                                sh 'echo $(BRANCH_NAME)'
                                 sh 'docker image ls'
                             // }
             } // CONTAINER
@@ -29,12 +29,12 @@ node('kube-slave01') {
             sh 'echo "Everyting OK!"'
         }
     }
-    if (env.BRACH_NAME == 'master') {
-        stage('Finish it') {
+    if (BRACH_NAME == 'master') {
+        stage('Deploying') {
             sh 'echo It"s MASTER'
         }
     } else {
-        stage('Fail fast') {
+        stage('Devving') {
             sh 'echo $env.BRACH_NAME'
         }
     }
