@@ -1,10 +1,14 @@
 // #!/usr/bin/groovy
-// pipeline {
-//     agent any
-    //     node { label 'kube-slave01' }
-    // }
-
-    // stages {
+properties(
+    [
+        buildDiscarder(
+            logRotator(
+                daysToKeepStr: '7',
+                numToKeepStr: '25'
+            )
+        )
+    ]
+)
 node('kube-slave01') {
     stage('Build') {
         container('custom') {
@@ -18,14 +22,13 @@ node('kube-slave01') {
                                 sh 'echo $PROJ'
                                 sh 'docker pull $IMAGE'
                                 sh 'docker image ls'
-                                sh 'sleep 5'
                             // }
             } // CONTAINER
         }
     }
     if (currentBuild.currentResult == 'SUCCESS') {
         stage('Finish it') {
-            sh 'Everyting OK!'
+            sh 'echo "Everyting OK!"'
         }
     }
 } // STAGES
