@@ -15,22 +15,27 @@ node('kube-slave01') {
             script {
                 echo 'Building..'
                 // sh 'printenv'
-                sh 'echo $(BRANCH_NAME)'
+                sh 'echo $BRANCH_NAME'
                 // sh 'docker image ls'
             }
         } // CONTAINER
     }
     stage('Preparations') {
         container('custom') {
-            withEnv(['ENVIRONMENT=test',
-                'PROJ=jenkins-test',
-                'IMAGE=psmikat/jnlp-slave:test']) {
-                            // steps {
-                                echo 'Building..'
-                                // sh 'printenv'
-                                sh 'echo $(BRANCH_NAME)'
-                                // sh 'docker image ls'
-                            // }
+            withEnv(['PROJECT=jenkins-test',
+                     'IMGREPO=psmikat']) {
+                        script {
+                            gitCommitHash = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+                            shortCommitHash = gitCommitHash.take(7)
+
+                            COMMITTER_NAME = sh(returnStdout: true, script: 'git show -s --pretty=%an').trim()
+                            COMMIT_MESSAGE = sh(returnStdout: true, script: 'git log --format=%B -n 1 HEAD').trim()
+
+                            VERSION = shortCommitHash
+                            UNIT_TEST_COMPOSE_PROJECT_NAME = "$VERSION:UT"
+                            LIBRARY_TEST_COMPOSE_PROJECT_NAME = "$VERSION:LIB"
+                            IMAGE = "$IMGREPO/$PROJECT:$VERSION"
+                        }
             } // CONTAINER
         }
     }
