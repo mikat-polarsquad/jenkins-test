@@ -37,7 +37,7 @@ node('kube-slave01') {
                 UNIT_TEST_COMPOSE_PROJECT_NAME = "$VERSION:UT"
                 LIBRARY_TEST_COMPOSE_PROJECT_NAME = "$VERSION:LIB"
                 IMAGE = "$IMGREPO/$PROJECT:$VERSION"
-                sh 'echo "$IMAGE"'
+                sh 'printenv'
             }
         }
     }
