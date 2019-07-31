@@ -11,6 +11,7 @@ pipeline {
                     steps {
                         echo 'Building..'
                         sh 'hostname'
+                        sh 'docker --version'
                         sh 'sleep 5'
                     }
                 // } // CONTAINER
