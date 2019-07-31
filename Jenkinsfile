@@ -16,7 +16,7 @@ node('kube-slave01') {
                 echo 'Building..'
                 // sh 'printenv'
                 sh 'echo $BRANCH_NAME'
-                sh 'git init'
+                git 'https://github.com/mikat-polarsquad/jenkins-test'
                 sh 'git status'
             }
         } // CONTAINER
