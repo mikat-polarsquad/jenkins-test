@@ -42,7 +42,6 @@ node('kube-slave01') {
             } // CONTAINER
         }
     }
-    }
     if (currentBuild.currentResult == 'SUCCESS') {
         stage('Finish it') {
             sh 'echo $PROJECT'
@@ -56,6 +55,7 @@ node('kube-slave01') {
         stage('Devving') {
             sh 'echo $BRANCH_NAME'
         }
+    }
     }
 } // STAGES
     // }
