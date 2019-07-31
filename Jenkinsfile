@@ -1,10 +1,11 @@
+#!/usr/bin/groovy
 pipeline {
     // agent {
     //     node { label 'kube-slave01' }
     // }
 
     node('kube-slave01') {
-        stages {
+        // stages {
             stage('Build') {
                 container('custom') {
                     // steps {
@@ -37,6 +38,6 @@ pipeline {
             //         sh 'sleep 30'
             //     }
             // }
-        }
+        // } // STAGES
     }
 }
