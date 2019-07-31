@@ -18,9 +18,7 @@ node('kube-slave01') {
                             // steps {
                                 echo 'Building..'
                                 sh 'hostname'
-                                sh 'echo $ENVIRONMENT'
-                                sh 'echo $PROJ'
-                                sh 'docker pull $IMAGE'
+                                sh 'echo $env.BRANCH_NAME'
                                 sh 'docker image ls'
                             // }
             } // CONTAINER
@@ -29,6 +27,15 @@ node('kube-slave01') {
     if (currentBuild.currentResult == 'SUCCESS') {
         stage('Finish it') {
             sh 'echo "Everyting OK!"'
+        }
+    }
+    if (env.BRACH_NAME == 'master') {
+        stage('Finish it') {
+            sh 'echo It"s MASTER'
+        }
+    } else {
+        stage('Fail fast') {
+            sh 'echo $env.BRACH_NAME'
         }
     }
 } // STAGES
