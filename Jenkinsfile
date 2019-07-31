@@ -38,13 +38,18 @@ node('kube-slave01') {
                 UNIT_TEST_COMPOSE_PROJECT_NAME="$VERSION:UT"
                 LIBRARY_TEST_COMPOSE_PROJECT_NAME="$VERSION:LIB"
                 IMAGE="$IMGREPO/$PROJECT:$VERSION"
-                sh 'printenv'
+                sh 'echo ${IMAGE}'
             }
         }
     }
     stage('Building') {
         container('custom') {
-je            sh 'echo "Verifying build... && docker image ls"'
+            sh 'docker build -t ${IMAGE} .'
+        }
+    }
+    stage('Verifying build') {
+        container('custom') {
+            sh 'echo "Verifying build... && docker image ls"'
         }
     }
     if (env.BRANCH_NAME == 'master') {
