@@ -41,8 +41,10 @@ node('kube-slave01') {
         }
     }
     stage('Building') {
-        sh 'docker build -t $IMAGE .'
-        sh 'echo "Verifying build... && docker image ls"'
+        container('custom') {
+            sh 'docker build -t $IMAGE .'
+            sh 'echo "Verifying build... && docker image ls"'
+        }
     }
     if (env.BRANCH_NAME == 'master') {
         stage('Deploying') {
