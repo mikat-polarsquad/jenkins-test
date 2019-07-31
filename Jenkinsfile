@@ -9,7 +9,7 @@ properties(
         )
     ]
 )
-def IMAGE = ''
+// def IMAGE
 node('kube-slave01') {
     withEnv(['PROJECT=jenkins-testings',
                 'IMGREPO=psmikat']) {
@@ -28,24 +28,23 @@ node('kube-slave01') {
     stage('Preparations') {
         container('custom') {
             script {
-                gitCommitHash = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-                shortCommitHash = gitCommitHash.take(7)
+                gitCommitHash=sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+                shortCommitHash=gitCommitHash.take(7)
 
-                COMMITTER_NAME = sh(returnStdout: true, script: 'git show -s --pretty=%an').trim()
-                COMMIT_MESSAGE = sh(returnStdout: true, script: 'git log --format=%B -n 1 HEAD').trim()
+                COMMITTER_NAME=sh(returnStdout: true, script: 'git show -s --pretty=%an').trim()
+                COMMIT_MESSAGE=sh(returnStdout: true, script: 'git log --format=%B -n 1 HEAD').trim()
 
-                VERSION = shortCommitHash
-                UNIT_TEST_COMPOSE_PROJECT_NAME = "$VERSION:UT"
-                LIBRARY_TEST_COMPOSE_PROJECT_NAME = "$VERSION:LIB"
-                IMAGE = "$IMGREPO/$PROJECT:$VERSION"
+                VERSION=shortCommitHash
+                UNIT_TEST_COMPOSE_PROJECT_NAME="$VERSION:UT"
+                LIBRARY_TEST_COMPOSE_PROJECT_NAME="$VERSION:LIB"
+                IMAGE="$IMGREPO/$PROJECT:$VERSION"
                 sh 'printenv'
             }
         }
     }
     stage('Building') {
         container('custom') {
-            sh 'docker build -t ${IMAGE} .'
-            sh 'echo "Verifying build... && docker image ls"'
+je            sh 'echo "Verifying build... && docker image ls"'
         }
     }
     if (env.BRANCH_NAME == 'master') {
