@@ -1,9 +1,9 @@
 pipeline {
-    agent {
-        node { label 'kube-slave01' }
-    }
+    // agent {
+    //     node { label 'kube-slave01' }
+    // }
 
-    // node('kube-slave01') {
+    node('kube-slave01') {
         stages {
             stage('Build') {
                 container('custom') {
@@ -38,5 +38,5 @@ pipeline {
             //     }
             // }
         }
-    // }
+    }
 }
