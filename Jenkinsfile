@@ -1,10 +1,10 @@
 #!/usr/bin/groovy
-// pipeline {
-    // agent {
-    //     node { label 'kube-slave01' }
-    // }
+pipeline {
+    agent {
+        node { label 'kube-slave01' }
+    }
 
-    node('kube-slave01') {
+    // node('kube-slave01') {
         // stages {
             stage('Build') {
                 container('custom') {
