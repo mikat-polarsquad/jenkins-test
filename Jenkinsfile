@@ -17,6 +17,7 @@ node('kube-slave01') {
                         sh 'echo $ENVIRONMENT'
                         sh 'echo $PROJ'
                         sh 'docker pull $IMAGE'
+                        sh 'docker image ls'
                         sh 'sleep 5'
                     // }
                 } // CONTAINER
