@@ -9,8 +9,8 @@ properties(
         )
     ]
 )
-def IMAGE="test/test"
 node('kube-slave01') {
+def IMAGE="test/test"
     withEnv(['PROJECT=jenkins-testings',
                 'IMGREPO=psmikat']) {
     stage('Init') {
