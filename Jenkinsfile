@@ -6,10 +6,8 @@
 
     // stages {
 node('kube-slave01') {
-    withEnv(
-        ['ENVIRONMENT=test',
-         'PROJ=jenkins-test']
-    )
+    // withEnv(['ENVIRONMENT=test',
+    //      'PROJ=jenkins-test'])
     stage('Build') {
         container('custom') {
             steps {
