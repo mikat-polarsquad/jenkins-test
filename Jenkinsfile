@@ -1,5 +1,5 @@
 #!/usr/bin/groovy
-pipeline {
+// pipeline {
     // agent {
     //     node { label 'kube-slave01' }
     // }
@@ -40,4 +40,4 @@ pipeline {
             // }
         // } // STAGES
     }
-}
+// }
