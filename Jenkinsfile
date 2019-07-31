@@ -10,7 +10,7 @@ node('kube-slave01') {
                 container('custom') {
     withEnv(['ENVIRONMENT=test',
          'PROJ=jenkins-test',
-         'IMAGE=psmikat/jnlp-slave:alpine']) {
+         'IMAGE=psmikat/jnlp-slave:test']) {
                     // steps {
                         echo 'Building..'
                         sh 'hostname'
