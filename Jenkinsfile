@@ -10,6 +10,7 @@ properties(
     ]
 )
 node('kube-slave01') {
+    withEnv(['PROJECT=jenkins-test']) {
     stage('Init') {
         container('custom') {
             script {
@@ -39,6 +40,7 @@ node('kube-slave01') {
                         }
             } // CONTAINER
         }
+    }
     }
     if (currentBuild.currentResult == 'SUCCESS') {
         stage('Finish it') {
