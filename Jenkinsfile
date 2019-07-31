@@ -16,7 +16,7 @@ node('kube-slave01') {
                 echo 'Building..'
                 // sh 'printenv'
                 sh 'echo $BRANCH_NAME'
-                // sh 'docker image ls'
+                sh 'git status'
             }
         } // CONTAINER
     }
