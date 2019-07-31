@@ -17,8 +17,8 @@ node('kube-slave01') {
                 'IMAGE=psmikat/jnlp-slave:test']) {
                             // steps {
                                 echo 'Building..'
-                                sh 'hostname'
-                                sh 'echo $env.BRANCH_NAME'
+                                sh 'printenv'
+                                sh 'echo $(env.BRANCH_NAME)'
                                 sh 'docker image ls'
                             // }
             } // CONTAINER
