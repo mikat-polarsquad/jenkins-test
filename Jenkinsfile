@@ -10,7 +10,17 @@ properties(
     ]
 )
 node('kube-slave01') {
-    stage('Build') {
+    stage('Init') {
+        container('custom') {
+            script {
+                echo 'Building..'
+                // sh 'printenv'
+                sh 'echo $(BRANCH_NAME)'
+                // sh 'docker image ls'
+            }
+        } // CONTAINER
+    }
+    stage('Preparations') {
         container('custom') {
             withEnv(['ENVIRONMENT=test',
                 'PROJ=jenkins-test',
@@ -18,8 +28,8 @@ node('kube-slave01') {
                             // steps {
                                 echo 'Building..'
                                 // sh 'printenv'
-                                // sh 'echo $(BRANCH_NAME)'
-                                sh 'docker image ls'
+                                sh 'echo $(BRANCH_NAME)'
+                                // sh 'docker image ls'
                             // }
             } // CONTAINER
         }
@@ -29,13 +39,13 @@ node('kube-slave01') {
             sh 'echo "Everyting OK!"'
         }
     }
-    if (env.BRACH_NAME == 'master') {
+    if (env.BRANCH_NAME == 'master') {
         stage('Deploying') {
             sh 'echo It"s MASTER'
         }
     } else {
         stage('Devving') {
-            sh 'echo $BRACH_NAME'
+            sh 'echo $BRANCH_NAME'
         }
     }
 } // STAGES
