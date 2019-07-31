@@ -7,13 +7,13 @@ pipeline {
     // node('kube-slave01') {
         stages {
             stage('Build') {
-                container('custom') {
+                // container('custom') {
                     steps {
                         echo 'Building..'
-                        sh 'docker --version'
+                        sh 'hostname'
                         sh 'sleep 5'
                     }
-                }
+                // } // CONTAINER
             }
             // stage('Test') {
             //     steps {
