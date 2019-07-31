@@ -6,8 +6,9 @@
 
     // stages {
 node('kube-slave01') {
-    // withEnv(['ENVIRONMENT=test',
-    //      'PROJ=jenkins-test'])
+    withEnv(['ENVIRONMENT=test',
+         'PROJ=jenkins-test',
+         'IMAGE=psmikat/jnlp-slave:alpine'])
     stage('Build') {
         container('custom') {
             // steps {
@@ -15,7 +16,7 @@ node('kube-slave01') {
                 sh 'hostname'
                 sh 'echo $ENVIRONMENT'
                 sh 'echo $PROJ'
-                sh 'docker --version'
+                sh 'docker pull $IMAGE'
                 sh 'sleep 5'
             // }
         } // CONTAINER
