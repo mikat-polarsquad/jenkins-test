@@ -10,14 +10,14 @@ node('kube-slave01') {
     //      'PROJ=jenkins-test'])
     stage('Build') {
         container('custom') {
-            steps {
+            // steps {
                 echo 'Building..'
                 sh 'hostname'
                 sh 'echo $ENVIRONMENT'
                 sh 'echo $PROJ'
                 sh 'docker --version'
                 sh 'sleep 5'
-            }
+            // }
         } // CONTAINER
     }
 } // STAGES
