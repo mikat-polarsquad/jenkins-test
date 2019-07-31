@@ -10,7 +10,8 @@ properties(
     ]
 )
 node('kube-slave01') {
-    withEnv(['PROJECT=jenkins-testings']) {
+    withEnv(['PROJECT=jenkins-testings',
+                'IMGREPO=psmikat']) {
     stage('Init') {
         container('custom') {
             script {
@@ -25,28 +26,23 @@ node('kube-slave01') {
     }
     stage('Preparations') {
         container('custom') {
-            withEnv(['PROJECT=jenkins-test',
-                     'IMGREPO=psmikat']) {
-                        script {
-                            gitCommitHash = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-                            shortCommitHash = gitCommitHash.take(7)
+            script {
+                gitCommitHash = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+                shortCommitHash = gitCommitHash.take(7)
 
-                            COMMITTER_NAME = sh(returnStdout: true, script: 'git show -s --pretty=%an').trim()
-                            COMMIT_MESSAGE = sh(returnStdout: true, script: 'git log --format=%B -n 1 HEAD').trim()
+                COMMITTER_NAME = sh(returnStdout: true, script: 'git show -s --pretty=%an').trim()
+                COMMIT_MESSAGE = sh(returnStdout: true, script: 'git log --format=%B -n 1 HEAD').trim()
 
-                            VERSION = shortCommitHash
-                            UNIT_TEST_COMPOSE_PROJECT_NAME = "$VERSION:UT"
-                            LIBRARY_TEST_COMPOSE_PROJECT_NAME = "$VERSION:LIB"
-                            IMAGE = "$IMGREPO/$PROJECT:$VERSION"
-                            sh 'echo $PROJECT'
-                        }
-            } // CONTAINER
+                VERSION = shortCommitHash
+                UNIT_TEST_COMPOSE_PROJECT_NAME = "$VERSION:UT"
+                LIBRARY_TEST_COMPOSE_PROJECT_NAME = "$VERSION:LIB"
+                IMAGE = "$IMGREPO/$PROJECT:$VERSION"
+            }
         }
     }
-    if (currentBuild.currentResult == 'SUCCESS') {
-        stage('Finish it') {
-            sh 'echo $PROJECT'
-        }
+    stage('Building') {
+        sh 'docker build -t $IMAGE .'
+        sh 'echo "Verifying build... && docker image ls"'
     }
     if (env.BRANCH_NAME == 'master') {
         stage('Deploying') {
