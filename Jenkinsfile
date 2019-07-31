@@ -4,8 +4,8 @@ pipeline {
     //     node { label 'kube-slave01' }
     // }
 
-    node('kube-slave01') {
-        stages {
+    stages {
+       node('kube-slave01') {
             stage('Build') {
                 // container('custom') {
                     steps {
