@@ -9,7 +9,7 @@ properties(
         )
     ]
 )
-// def IMAGE
+def IMAGE="test/test"
 node('kube-slave01') {
     withEnv(['PROJECT=jenkins-testings',
                 'IMGREPO=psmikat']) {
@@ -18,7 +18,7 @@ node('kube-slave01') {
             script {
                 echo 'Building..'
                 // sh 'printenv'
-                sh 'echo $BRANCH_NAME'
+                sh 'echo ${IMAGE}'
                 git branch: 'testing-trigger', url: 'https://github.com/mikat-polarsquad/jenkins-test'
                 sh 'git status'
                 sh 'ls -la'
