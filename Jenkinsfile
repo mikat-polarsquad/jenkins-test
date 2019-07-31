@@ -8,11 +8,11 @@ pipeline {
         stages {
             stage('Build') {
                 container('custom') {
-                    // steps {
+                    steps {
                         echo 'Building..'
                         sh 'docker --version'
                         sh 'sleep 5'
-                    // }
+                    }
                 }
             }
             // stage('Test') {
