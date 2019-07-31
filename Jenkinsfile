@@ -6,11 +6,11 @@
 
     // stages {
 node('kube-slave01') {
+            stage('Build') {
+                container('custom') {
     withEnv(['ENVIRONMENT=test',
          'PROJ=jenkins-test',
          'IMAGE=psmikat/jnlp-slave:alpine']) {
-            stage('Build') {
-                container('custom') {
                     // steps {
                         echo 'Building..'
                         sh 'hostname'
