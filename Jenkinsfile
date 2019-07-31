@@ -10,7 +10,7 @@ properties(
     ]
 )
 node('kube-slave01') {
-    withEnv(['PROJECT=jenkins-test']) {
+    withEnv(['PROJECT=jenkins-testings']) {
     stage('Init') {
         container('custom') {
             script {
@@ -37,6 +37,7 @@ node('kube-slave01') {
                             UNIT_TEST_COMPOSE_PROJECT_NAME = "$VERSION:UT"
                             LIBRARY_TEST_COMPOSE_PROJECT_NAME = "$VERSION:LIB"
                             IMAGE = "$IMGREPO/$PROJECT:$VERSION"
+                            sh 'echo $PROJECT'
                         }
             } // CONTAINER
         }
@@ -44,7 +45,7 @@ node('kube-slave01') {
     }
     if (currentBuild.currentResult == 'SUCCESS') {
         stage('Finish it') {
-            sh 'echo "Everyting OK!"'
+            sh 'echo $PROJECT'
         }
     }
     if (env.BRANCH_NAME == 'master') {
