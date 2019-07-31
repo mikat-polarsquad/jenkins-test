@@ -9,6 +9,7 @@ properties(
         )
     ]
 )
+def IMAGE = ''
 node('kube-slave01') {
     withEnv(['PROJECT=jenkins-testings',
                 'IMGREPO=psmikat']) {
