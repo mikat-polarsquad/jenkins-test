@@ -5,7 +5,7 @@ pipeline {
     }
 
     // node('kube-slave01') {
-        // stages {
+        stages {
             stage('Build') {
                 container('custom') {
                     // steps {
@@ -38,6 +38,6 @@ pipeline {
             //         sh 'sleep 30'
             //     }
             // }
-        // } // STAGES
+        } // STAGES
     }
 // }
