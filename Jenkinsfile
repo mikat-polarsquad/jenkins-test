@@ -57,7 +57,7 @@ node('kube-slave01') {
         }
     }
     stage('Parallel') {
-        container {
+        container('custom') {
             parallel 'Verifying': {
                 stage('Verify image') {
                     sh "docker image ls"
