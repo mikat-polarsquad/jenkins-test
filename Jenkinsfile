@@ -47,7 +47,7 @@ node('kube-slave01') {
         container('custom') {
             echo "${IMAGE}"
             // sh 'docker build -t "${IMAGE}" .'
-            def customImage = docker.build("${IMAGE}")
+            def customImage = docker.build("${IMAGE}", "--network host .")
             echo "${customImage}"
         }
     }
