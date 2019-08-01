@@ -28,7 +28,7 @@ node('kube-slave01') {
     }
     stage('Preparations') {
         container('custom') {
-            // script {
+            script {
                 gitCommitHash=sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
                 shortCommitHash=gitCommitHash.take(7)
 
@@ -40,7 +40,7 @@ node('kube-slave01') {
                 LIBRARY_TEST_COMPOSE_PROJECT_NAME="$VERSION:LIB"
                 IMAGE="$IMGREPO/$PROJECT:$VERSION"
                 echo "${IMAGE}"
-            // }
+            }
         }
     }
     stage('Building') {
@@ -53,7 +53,7 @@ node('kube-slave01') {
     }
     stage('Verifying build') {
         container('custom') {
-            sh 'echo "Verifying build... && docker image ls"'
+            sh "docker image ls"
         }
     }
     if (env.BRANCH_NAME == 'master') {
