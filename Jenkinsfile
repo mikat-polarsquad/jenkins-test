@@ -57,13 +57,15 @@ node('kube-slave01') {
         }
     }
     stage('Parallel') {
-        parallel 'Verifying': {
-            stage('Verify image') {
-                sh "docker image ls"
-            }
-        }, 'echoing': {
-            stage('Echo') {
-                echo "Custom image is: ${customImage}"
+        container {
+            parallel 'Verifying': {
+                stage('Verify image') {
+                    sh "docker image ls"
+                }
+            }, 'echoing': {
+                stage('Echo') {
+                    echo "Custom image is: ${customImage}"
+                }
             }
         }
     }
