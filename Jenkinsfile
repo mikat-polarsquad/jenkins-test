@@ -10,6 +10,10 @@ properties(
     ]
 )
 def IMAGE
+def echoStrings = ["eka", "toka", "kolmas", "neljas"]
+def echoesParallel = echoStrings.collectionEntries {
+    ["echoing ${it}" : transformIntoStep(it)]
+}
 def builds = [:]
 node('kube-slave01') {
     withEnv(['PROJECT=jenkins-testings',
@@ -44,19 +48,17 @@ node('kube-slave01') {
             }
         }
     }
-    parallel {
-        stage('Building') {
-            container('custom') {
-                echo "${IMAGE}"
-                // sh 'docker build -t "${IMAGE}" .'
-                def customImage = docker.build("${IMAGE}", "--network host .")
-                echo "${customImage}"
-            }
+    stage('Building') {
+        container('custom') {
+            echo "${IMAGE}"
+            // sh 'docker build -t "${IMAGE}" .'
+            def customImage = docker.build("${IMAGE}", "--network host .")
+            echo "${customImage}"
         }
-        stage('Verifying build') {
-            container('custom') {
-                sh "docker image ls"
-            }
+    }
+    stage('Verifying build') {
+        container('custom') {
+            sh "docker image ls"
         }
     }
     if (env.BRANCH_NAME == 'master') {
