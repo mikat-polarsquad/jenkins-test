@@ -45,8 +45,9 @@ node('kube-slave01') {
     stage('Building') {
         container('custom') {
             echo "${IMAGE}"
-            sh 'docker build -t "${IMAGE}" .'
-            // docker.build()
+            // sh 'docker build -t "${IMAGE}" .'
+            def customImage = docker.build("${IMAGE}")
+            echo "${customImage}"
         }
     }
     stage('Verifying build') {
