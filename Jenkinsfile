@@ -22,7 +22,7 @@ node('kube-slave01') {
                 git branch: 'testing-trigger', url: 'https://github.com/mikat-polarsquad/jenkins-test'
                 sh 'git status'
                 sh 'curl https://google.com'
-                sh 'sleep 90'
+                // sh 'sleep 90'
             }
         } // CONTAINER
     }
