@@ -64,7 +64,7 @@ node('kube-slave01') {
                 }
             }, 'echoing': {
                 stage('Echo') {
-                    echo "Custom image is: ${customImage}"
+                    echo "Custom image is built!"
                 }
             }
         }
