@@ -9,8 +9,8 @@ properties(
         )
     ]
 )
+def IMAGE
 node('kube-slave01') {
-def IMAGE="test/test"
     withEnv(['PROJECT=jenkins-testings',
                 'IMGREPO=psmikat']) {
     stage('Init') {
@@ -18,7 +18,7 @@ def IMAGE="test/test"
             script {
                 echo 'Building..'
                 // sh 'printenv'
-                sh 'echo ${IMAGE}'
+                echo "${IMAGE}"
                 git branch: 'testing-trigger', url: 'https://github.com/mikat-polarsquad/jenkins-test'
                 sh 'git status'
                 sh 'ls -la'
@@ -38,13 +38,14 @@ def IMAGE="test/test"
                 UNIT_TEST_COMPOSE_PROJECT_NAME="$VERSION:UT"
                 LIBRARY_TEST_COMPOSE_PROJECT_NAME="$VERSION:LIB"
                 IMAGE="$IMGREPO/$PROJECT:$VERSION"
-                sh 'echo ${IMAGE}'
+                echo "${IMAGE}"
             }
         }
     }
     stage('Building') {
         container('custom') {
             sh 'docker build -t ${IMAGE} .'
+            // docker.build()
         }
     }
     stage('Verifying build') {
