@@ -10,6 +10,7 @@ properties(
     ]
 )
 def IMAGE
+def builds = [:]
 node('kube-slave01') {
     withEnv(['PROJECT=jenkins-testings',
                 'IMGREPO=psmikat']) {
@@ -43,17 +44,19 @@ node('kube-slave01') {
             }
         }
     }
-    stage('Building') {
-        container('custom') {
-            echo "${IMAGE}"
-            // sh 'docker build -t "${IMAGE}" .'
-            def customImage = docker.build("${IMAGE}", "--network host .")
-            echo "${customImage}"
+    parallel {
+        stage('Building') {
+            container('custom') {
+                echo "${IMAGE}"
+                // sh 'docker build -t "${IMAGE}" .'
+                def customImage = docker.build("${IMAGE}", "--network host .")
+                echo "${customImage}"
+            }
         }
-    }
-    stage('Verifying build') {
-        container('custom') {
-            sh "docker image ls"
+        stage('Verifying build') {
+            container('custom') {
+                sh "docker image ls"
+            }
         }
     }
     if (env.BRANCH_NAME == 'master') {
