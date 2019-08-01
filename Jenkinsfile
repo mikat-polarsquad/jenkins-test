@@ -10,10 +10,10 @@ properties(
     ]
 )
 def IMAGE
-def echoStrings = ["eka", "toka", "kolmas", "neljas"]
-def echoesParallel = echoStrings.collectionEntries {
-    ["echoing ${it}" : transformIntoStep(it)]
-}
+// def echoStrings = ["eka", "toka", "kolmas", "neljas"]
+// def echoesParallel = echoStrings.collectionEntries {
+//     ["echoing ${it}" : transformIntoStep(it)]
+// }
 def builds = [:]
 node('kube-slave01') {
     withEnv(['PROJECT=jenkins-testings',
@@ -54,6 +54,17 @@ node('kube-slave01') {
             // sh 'docker build -t "${IMAGE}" .'
             def customImage = docker.build("${IMAGE}", "--network host .")
             echo "${customImage}"
+        }
+    }
+    stage('Parallel') {
+        parallel 'Verifying': {
+            stage('Verify image') {
+                sh "docker image ls"
+            }
+        }, 'echoing': {
+            stage('Echo') {
+                echo "Custom image is: ${customImage}"
+            }
         }
     }
     stage('Verifying build') {
