@@ -21,7 +21,7 @@ node('kube-slave01') {
                 echo "${IMAGE}"
                 git branch: 'testing-trigger', url: 'https://github.com/mikat-polarsquad/jenkins-test'
                 sh 'git status'
-                sh 'ls -la'
+                sh 'sleep 90'
             }
         } // CONTAINER
     }
