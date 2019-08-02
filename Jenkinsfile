@@ -96,7 +96,7 @@ node('kube-slave01') {
         // For POST handling
         echo "POST HANDLING!"
         // sh 'printenv'
-        // def currentResult = currentBuild.currentResult ?: 'SUCCESS'
+        def currentResult = currentBuild.result ?: 'SUCCESS'
         // echo "${currentResult}"
         
         echo "${currentBuild.getCurrentResult()}"
