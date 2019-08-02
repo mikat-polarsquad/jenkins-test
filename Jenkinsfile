@@ -92,19 +92,20 @@ node('kube-slave01') {
     } finally {
         // For POST handling
         echo "POST HANDLING!"
-        echo "${currentBuild.currentResult}"
-        if (currentBuild.currentResult == 'SUCCESS') {
+        def currentResult = currentBuild.result ?: 'SUCCESS'
+        echo "${currentResult}"
+        if (currentResult == 'SUCCESS') {
             stage('Success') {
                 echo 'Build has succeeded!'
                 echo "( ◉◞౪◟◉) \nBuilding YT HTML parser succeeded for:\n'${COMMIT_MESSAGE}'\nby ${COMMITTER_NAME}"
             }
         }
-        if (currentBuild.currentResult == 'UNSTABLE') {
+        if (currentResult == 'UNSTABLE') {
             stage('Unstable') {
                 echo 'Build is UNSTABLE!'
             }
         }
-        if (currentBuild.currentResult == 'FAILURE') {
+        if (currentResult == 'FAILURE') {
             stage('Failure') {
                 echo 'Build has FAILED!'
             }
