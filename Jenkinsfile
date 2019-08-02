@@ -76,13 +76,14 @@ node('kube-slave01') {
                         echo "Its MASTER"
                     }
                 }
-            } else {
-                stage('Devving') {
-                    container('custom') {
-                        echo "${env.BRANCH_NAME}"
-                    }
-                }
             }
+            // } else {
+            //     stage('Devving') {
+            //         container('custom') {
+            //             echo "${env.BRANCH_NAME}"
+            //         }
+            //     }
+            // }
         }
     } catch(e) {
         stage('ERROR') {
