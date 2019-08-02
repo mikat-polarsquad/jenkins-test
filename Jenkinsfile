@@ -9,7 +9,7 @@ properties(
         )
     ]
 )
-def IMAGE
+// def IMAGE
 // def echoStrings = ["eka", "toka", "kolmas", "neljas"]
 // def echoesParallel = echoStrings.collectionEntries {
 //     ["echoing ${it}" : transformIntoStep(it)]
