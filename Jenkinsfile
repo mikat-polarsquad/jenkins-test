@@ -65,9 +65,9 @@ node('kube-slave01') {
             stage('Verifying build') {
                 container('custom') {
                     sh "docker image ls ${IMAGE}"
-                    // customImage.inside {
-                    //     sh 'whoami'
-                    // }
+                    customImage.inside {
+                        sh 'whoami'
+                    }
                 }
             }
             if (env.BRANCH_NAME == 'master') {
