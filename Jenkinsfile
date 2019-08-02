@@ -21,15 +21,9 @@ node('kube-slave01') {
                     'IMGREPO=psmikat']) {
             stage('Init') {
                 container('custom') {
-                    script {
-                        echo 'Building..'
-                        // sh 'printenv'
-                        // echo "${IMAGE}"
+                    // script {
                         git branch: 'testing-trigger', url: 'https://github.com/mikat-polarsquad/jenkins-test'
-                        sh 'git status'
-                        sh 'curl https://google.com'
-                        // sh 'sleep 90'
-                    }
+                    // }
                 } // CONTAINER
             }
             stage('Preparations') {
@@ -51,7 +45,6 @@ node('kube-slave01') {
             }
             stage('Building') {
                 container('custom') {
-                    echo "${IMAGE}"
                     // sh 'docker build -t "${IMAGE}" .'
                     customImage = docker.build("${IMAGE}", "--network host .")
                     echo "${customImage}"
