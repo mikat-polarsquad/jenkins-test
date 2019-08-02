@@ -14,7 +14,7 @@ properties(
 // def echoesParallel = echoStrings.collectionEntries {
 //     ["echoing ${it}" : transformIntoStep(it)]
 // }
-def builds = [:]
+def currentBuild.currentResult
 node('kube-slave01') {
     try {
         withEnv(['PROJECT=jenkins-testings',
@@ -87,13 +87,15 @@ node('kube-slave01') {
     } catch(e) {
         stage('ERROR') {
             echo 'There was some error!'
+            sh 'printenv'
             throw e
-            currentBuild.result='FAILURE'
+            currentBuild.currentResult = 'FAILURE'
         }
     } finally {
         // For POST handling
         echo "POST HANDLING!"
-        def currentResult = currentBuild.result ?: 'SUCCESS'
+        sh 'printenv'
+        def currentResult = currentBuild.currentResult ?: 'SUCCESS'
         echo "${currentResult}"
         if (currentResult == 'SUCCESS') {
             stage('Success') {
