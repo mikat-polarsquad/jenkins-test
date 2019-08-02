@@ -90,9 +90,15 @@ node('kube-slave01') {
     } finally {
         // For POST handling
         echo "POST HANDLING!"
-        sh 'printenv'
-        def currentResult = currentBuild.currentResult ?: 'SUCCESS'
-        echo "${currentResult}"
+        // sh 'printenv'
+        // def currentResult = currentBuild.currentResult ?: 'SUCCESS'
+        // echo "${currentResult}"
+        
+        echo "${currentBuild.getCurrentResult()}"
+        if (currentBuild.resultIsBetterOrEqualTo('SUCCESS')) {
+            echo "Previous build failed ${currentBuild?.getPreviousBuild()?.number} and now it has been fixed"
+        }
+            
         if (currentResult == 'SUCCESS') {
             stage('Success') {
                 echo 'Build has succeeded!'
