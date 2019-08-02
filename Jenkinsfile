@@ -73,13 +73,13 @@ node('kube-slave01') {
             if (env.BRANCH_NAME == 'master') {
                 stage('Deploying') {
                     container('custom') {
-                        sh 'echo It"s MASTER'
+                        echo "Its MASTER"
                     }
                 }
             } else {
                 stage('Devving') {
                     container('custom') {
-                        sh 'echo $BRANCH_NAME'
+                        echo "${env.BRANCH_NAME}"
                     }
                 }
             }
