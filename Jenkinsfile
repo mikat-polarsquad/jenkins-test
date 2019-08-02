@@ -88,6 +88,7 @@ node('kube-slave01') {
         stage('ERROR') {
             echo 'There was some error!'
             throw e
+            currentBuild.result='FAILURE'
         }
     } finally {
         // For POST handling
