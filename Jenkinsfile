@@ -16,75 +16,92 @@ properties(
 // }
 def builds = [:]
 node('kube-slave01') {
-    withEnv(['PROJECT=jenkins-testings',
-                'IMGREPO=psmikat']) {
-        stage('Init') {
-            container('custom') {
-                script {
-                    echo 'Building..'
-                    // sh 'printenv'
-                    // echo "${IMAGE}"
-                    git branch: 'testing-trigger', url: 'https://github.com/mikat-polarsquad/jenkins-test'
-                    sh 'git status'
-                    sh 'curl https://google.com'
-                    // sh 'sleep 90'
+    try {
+        withEnv(['PROJECT=jenkins-testings',
+                    'IMGREPO=psmikat']) {
+            stage('Init') {
+                container('custom') {
+                    script {
+                        echo 'Building..'
+                        // sh 'printenv'
+                        // echo "${IMAGE}"
+                        git branch: 'testing-trigger', url: 'https://github.com/mikat-polarsquad/jenkins-test'
+                        sh 'git status'
+                        sh 'curl https://google.com'
+                        // sh 'sleep 90'
+                    }
+                } // CONTAINER
+            }
+            stage('Preparations') {
+                container('custom') {
+                    script {
+                        gitCommitHash=sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+                        shortCommitHash=gitCommitHash.take(7)
+
+                        COMMITTER_NAME=sh(returnStdout: true, script: 'git show -s --pretty=%an').trim()
+                        COMMIT_MESSAGE=sh(returnStdout: true, script: 'git log --format=%B -n 1 HEAD').trim()
+
+                        VERSION=shortCommitHash
+                        UNIT_TEST_COMPOSE_PROJECT_NAME="$VERSION:UT"
+                        LIBRARY_TEST_COMPOSE_PROJECT_NAME="$VERSION:LIB"
+                        IMAGE="$IMGREPO/$PROJECT:$VERSION"
+                        echo "${IMAGE}"
+                    }
                 }
-            } // CONTAINER
-        }
-        stage('Preparations') {
-            container('custom') {
-                script {
-                    gitCommitHash=sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-                    shortCommitHash=gitCommitHash.take(7)
-
-                    COMMITTER_NAME=sh(returnStdout: true, script: 'git show -s --pretty=%an').trim()
-                    COMMIT_MESSAGE=sh(returnStdout: true, script: 'git log --format=%B -n 1 HEAD').trim()
-
-                    VERSION=shortCommitHash
-                    UNIT_TEST_COMPOSE_PROJECT_NAME="$VERSION:UT"
-                    LIBRARY_TEST_COMPOSE_PROJECT_NAME="$VERSION:LIB"
-                    IMAGE="$IMGREPO/$PROJECT:$VERSION"
+            }
+            stage('Building') {
+                container('custom') {
                     echo "${IMAGE}"
+                    // sh 'docker build -t "${IMAGE}" .'
+                    customImage = docker.build("${IMAGE}", "--network host .")
+                    echo "${customImage}"
                 }
             }
-        }
-        stage('Building') {
-            container('custom') {
-                echo "${IMAGE}"
-                // sh 'docker build -t "${IMAGE}" .'
-                customImage = docker.build("${IMAGE}", "--network host .")
-                echo "${customImage}"
-            }
-        }
-        stage('Parallel') {
-            container('custom') {
-                parallel 'Verifying': {
-                    stage('Verify image') {
-                        sh "docker image ls ${IMAGE}"
-                        // customImage.inside {
-                        //     sh 'whoami'
-                        // }
-                    }
-                }, 'echoing': {
-                    stage('Echo') {
-                        echo "Custom image is built!"
+            stage('Parallel') {
+                container('custom') {
+                    parallel 'Verifying': {
+                        stage('Verify image') {
+                            sh "docker image ls ${IMAGE}"
+                            // customImage.inside {
+                            //     sh 'whoami'
+                            // }
+                        }
+                    }, 'echoing': {
+                        stage('Echo') {
+                            echo "Custom image is built!"
+                        }
                     }
                 }
             }
-        }
-        stage('Verifying build') {
-            container('custom') {
-                sh "docker image ls"
+            stage('Verifying build') {
+                container('custom') {
+                    sh "docker image ls"
+                }
+            }
+            if (env.BRANCH_NAME == 'master') {
+                stage('Deploying') {
+                    sh 'echo It"s MASTER'
+                }
+            } else {
+                stage('Devving') {
+                    sh 'echo $BRANCH_NAME'
+                }
             }
         }
-        if (env.BRANCH_NAME == 'master') {
-            stage('Deploying') {
-                sh 'echo It"s MASTER'
-            }
-        } else {
-            stage('Devving') {
-                sh 'echo $BRANCH_NAME'
-            }
+    } catch(e) {
+        echo 'There was some error!'
+        throw e
+    } finally {
+        // For POST handling
+        if (currentBuild.currentResult == 'SUCCESS') {
+            echo 'Build has succeeded!'
+            echo "( ◉◞౪◟◉) \nBuilding YT HTML parser succeeded for:\n'${COMMIT_MESSAGE}'\nby ${COMMITTER_NAME}"
+        }
+        if (currentBuild.currentResult == 'UNSTABLE') {
+            echo 'Build is UNSTABLE!'
+        }
+        if (currentBuild.currentResult == 'FAILURE') {
+            echo 'Build has FAILED!'
         }
     }
 } // STAGES
