@@ -10,11 +10,7 @@ properties(
     ]
 )
 // def IMAGE
-// def echoStrings = ["eka", "toka", "kolmas", "neljas"]
-// def echoesParallel = echoStrings.collectionEntries {
-//     ["echoing ${it}" : transformIntoStep(it)]
-// }
-def currentBuild.currentResult
+
 node('kube-slave01') {
     try {
         withEnv(['PROJECT=jenkins-testings',
