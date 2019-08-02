@@ -98,6 +98,7 @@ node('kube-slave01') {
         }
     } finally {
         // For POST handling
+        echo "POST HANDLING!"
         echo "Build result: ${currentBuild.curretResult}"
         if (currentBuild.currentResult == 'SUCCESS') {
             stage('Success') {
