@@ -92,8 +92,10 @@ node('kube-slave01') {
             }
         }
     } catch(e) {
-        echo 'There was some error!'
-        throw e
+        stage('ERROR') {
+            echo 'There was some error!'
+            throw e
+        }
     } finally {
         // For POST handling
         if (currentBuild.currentResult == 'SUCCESS') {
