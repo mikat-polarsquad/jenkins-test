@@ -23,7 +23,7 @@ node('kube-slave01') {
             script {
                 echo 'Building..'
                 // sh 'printenv'
-                echo "${IMAGE}"
+                // echo "${IMAGE}"
                 git branch: 'testing-trigger', url: 'https://github.com/mikat-polarsquad/jenkins-test'
                 sh 'git status'
                 sh 'curl https://google.com'
