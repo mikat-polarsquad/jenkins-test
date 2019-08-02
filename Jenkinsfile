@@ -61,9 +61,9 @@ node('kube-slave01') {
                 parallel 'Verifying': {
                     stage('Verify image') {
                         sh "docker image ls ${IMAGE}"
-                        customImage.inside {
-                            sh 'whoami'
-                        }
+                        // customImage.inside {
+                        //     sh 'whoami'
+                        // }
                     }
                 }, 'echoing': {
                     stage('Echo') {
