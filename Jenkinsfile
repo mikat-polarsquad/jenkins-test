@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-@Library('Utils')
+@Library('Utils') _
 properties(
     [
         buildDiscarder(
