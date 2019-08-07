@@ -13,6 +13,7 @@ properties(
 )
 def notifier = new org.gradiant.jenkins.slack.SlackNotifier()
 
+
 node('kube-slave01') {
     try {
       env.SLACK_CHANNEL = 'jenkins-testing'
