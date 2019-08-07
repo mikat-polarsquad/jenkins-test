@@ -97,8 +97,9 @@ node('kube-slave01') {
             echo 'There was some error!'
             // throw err
             currentBuild.result = 'FAILURE'
-            // notifySlack.send currentBuild.result
-            notify.send currentBuild.result
+            notifier.notifyError(err)
+
+            // notify.send currentBuild.result
             throw err
         // }
     } finally {
@@ -127,6 +128,7 @@ node('kube-slave01') {
         if (currentResult == 'FAILURE') {
             stage('Failure') {
                 echo 'Build has FAILED!'
+                notifier.notifyResult()
             }
         }
     }
