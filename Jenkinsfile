@@ -116,18 +116,18 @@ node('kube-slave01') {
         if (currentResult == 'SUCCESS') {
             stage('Success') {
                 echo 'Build has succeeded!'
-                echo "( ◉◞౪◟◉) \nBuilding YT HTML parser succeeded for:\n'${COMMIT_MESSAGE}'\nby ${COMMITTER_NAME}"
+                notifier.notifyResult()
             }
         }
         if (currentResult == 'UNSTABLE') {
             stage('Unstable') {
                 echo 'Build is UNSTABLE!'
+                notifier.notifyResult()
             }
         }
         if (currentResult == 'FAILURE') {
             stage('Failure') {
                 echo 'Build has FAILED!'
-                sh "printenv"
                 notifier.notifyResult()
             }
         }
