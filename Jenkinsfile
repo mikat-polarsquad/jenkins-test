@@ -25,7 +25,7 @@ node('kube-slave01') {
             }
             stage('Preparations') {
                 container('custom') {
-                    script {¸
+                    script {
                         gitCommitHash = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
                         shortCommitHash = gitCommitHash.take(7)
 
