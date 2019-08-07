@@ -1,5 +1,6 @@
 #!/usr/bin/env groovy
-@Library('Utils') import org.sharkpunch.jenkins.notifySlack
+@Library('Utils') _
+// @Library('Utils') import org.sharkpunch.jenkins.notifySlack
 properties(
     [
         buildDiscarder(
