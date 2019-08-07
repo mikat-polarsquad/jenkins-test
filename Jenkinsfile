@@ -19,7 +19,7 @@ node('kube-slave01') {
             stage('Init') {
                 container('custom') {
                     // script {
-                        git branch: env.BRANCH_NAME, url: 'https://github.com/mikat-polarsquad/jenkins-test'
+                        git branch: 'testing-trigger', url: 'https://github.com/mikat-polarsquad/jenkins-test'
                     // }
                 } // CONTAINER
             }
