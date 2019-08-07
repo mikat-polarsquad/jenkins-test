@@ -103,9 +103,7 @@ node('kube-slave01') {
 
         // stage('Post') {
         //   echo "POST HANDLING!"
-        //   def currentResult = currentBuild.result ?: 'SUCCESS'
-        //   echo "${currentBuild.getCurrentResult()}"
-        //   if (currentBuild.resultIsBetterOrEqualTo('SUCCESS')) {
+
 
 
 
