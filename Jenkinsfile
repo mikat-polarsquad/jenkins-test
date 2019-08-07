@@ -1,6 +1,5 @@
 // #!/usr/bin/env groovy
 @Library('Utils') _ // import org.sharkpunch.jenkins.slack
-// @Library('Utils') import org.sharkpunch.jenkins.notifySlack
 def notifier = new org.sharkpunch.jenkins.slack.SlackNotifier()
 
 properties(
