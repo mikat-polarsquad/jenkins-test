@@ -99,14 +99,17 @@ node('kube-slave01') {
             throw err
     } finally {
         // For POST handling
-        echo "POST HANDLING!"
-        def currentResult = currentBuild.result ?: 'SUCCESS'
-        // echo "${currentResult}"
-
-        echo "${currentBuild.getCurrentResult()}"
-        if (currentBuild.resultIsBetterOrEqualTo('SUCCESS')) {
-            echo "Previous build failed ${currentBuild?.getPreviousBuild()?.number} and now it has been fixed"
+        stage('Post') {
+          echo "POST HANDLING!"
+          def currentResult = currentBuild.result ?: 'SUCCESS'
+          stage('Cleaning') {
+            echo "${currentBuild.getCurrentResult()}"
+            if (currentBuild.resultIsBetterOrEqualTo('SUCCESS')) {
+              echo "Previous build failed ${currentBuild?.getPreviousBuild()?.number} and now it has been fixed"
+            }
+          }
         }
+
 
         if (currentResult == 'SUCCESS') {
             stage('Success') {
