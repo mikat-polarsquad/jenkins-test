@@ -61,9 +61,6 @@ node('kube-slave01') {
                     parallel 'Verifying': {
                         stage('Verify image') {
                             sh "docker image ls ${IMAGE}"
-                            // customImage.inside {
-                            //     sh 'whoami'
-                            // }
                         }
                     }, 'echoing': {
                         stage('Echo') {
@@ -92,19 +89,17 @@ node('kube-slave01') {
             currentBuild.result = 'SUCCESS'
         }
     } catch(err) {
-        // stage('ERROR') {
+        // DONT PUT INSIDE STAGE. THEN IT WILL BE SHOWN AS IT'S OWN STAGE ON PIPELINE VISUAL!
             echo 'There was some error!'
-            // throw err
+
             currentBuild.result = 'FAILURE'
             notifier.notifyError(err)
 
             // notify.send currentBuild.result
             throw err
-        // }
     } finally {
         // For POST handling
         echo "POST HANDLING!"
-        // sh 'printenv'
         def currentResult = currentBuild.result ?: 'SUCCESS'
         // echo "${currentResult}"
 
