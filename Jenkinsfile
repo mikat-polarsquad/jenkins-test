@@ -101,12 +101,6 @@ node('kube-slave01') {
         // For POST handling
         // THESE WILL BE EXECUTED ALLWAYS!
 
-        // stage('Post') {
-        //   echo "POST HANDLING!"
-
-
-
-
         if (currentBuild.result == 'SUCCESS') {
             stage('Success') {
                 echo 'Build has succeeded!'
