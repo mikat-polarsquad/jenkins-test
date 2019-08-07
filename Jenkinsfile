@@ -86,7 +86,7 @@ node('kube-slave01') {
             echo 'There was some error!'
             // error = throw err
             currentBuild.result = 'FAILURE'
-            notify.send currentBuild.result
+            notifySlack.send currentBuild.result
             throw err
         }
     } finally {
