@@ -128,6 +128,7 @@ node('kube-slave01') {
         if (currentResult == 'FAILURE') {
             stage('Failure') {
                 echo 'Build has FAILED!'
+                sh "printenv"
                 notifier.notifyResult()
             }
         }
