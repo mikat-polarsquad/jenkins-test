@@ -106,9 +106,7 @@ node('kube-slave01') {
         //   def currentResult = currentBuild.result ?: 'SUCCESS'
         //   echo "${currentBuild.getCurrentResult()}"
         //   if (currentBuild.resultIsBetterOrEqualTo('SUCCESS')) {
-        //     echo "Previous build failed ${currentBuild?.getPreviousBuild()?.number} and now it has been fixed"
-        //   }
-        // }
+
 
 
         if (currentBuild.result == 'SUCCESS') {
