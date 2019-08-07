@@ -1,5 +1,5 @@
 // #!/usr/bin/env groovy
-@Library('Utils') import org.sharkpunch.jenkins.slack
+@Library('Utils') _ // import org.sharkpunch.jenkins.slack
 // @Library('Utils') import org.sharkpunch.jenkins.notifySlack
 properties(
     [
@@ -11,7 +11,7 @@ properties(
         )
     ]
 )
-def notifier = new org.gradiant.jenkins.slack.SlackNotifier()
+def notifier = new org.sharkpunch.jenkins.slack.SlackNotifier()
 
 
 node('kube-slave01') {
