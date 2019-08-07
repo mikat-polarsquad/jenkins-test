@@ -18,9 +18,9 @@ node('kube-slave01') {
     try {
       env.SLACK_CHANNEL = 'jenkins-testing'
       env.SLACK_DOMAIN  = 'matchmade.slack.com'
-      // env.SLACK_CREDENTIALS = 'jenkins-slack-credentials-id'
       env.CHANGE_LIST = 'true'
       // env.TEST_SUMMARY = 'true'
+      env.NOTIFY_SUCCESS = 'true'
 
         withEnv(['PROJECT=jenkins-testings',
                     'IMGREPO=psmikat']) {
