@@ -30,8 +30,8 @@ node('kube-slave01') {
                         gitCommitHash = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
                         shortCommitHash = gitCommitHash.take(7)
 
-                        COMMITTER_NAME = sh(returnStdout: true, script: 'git show -s --pretty=%an').trim()
-                        COMMIT_MESSAGE = sh(returnStdout: true, script: 'git log --format=%B -n 1 HEAD').trim()
+                        env.COMMITTER_NAME = sh(returnStdout: true, script: 'git show -s --pretty=%an').trim()
+                        env.COMMIT_MESSAGE = sh(returnStdout: true, script: 'git log --format=%B -n 1 HEAD').trim()
 
                         VERSION = shortCommitHash
                         UNIT_TEST_COMPOSE_PROJECT_NAME = "$VERSION:UT"
@@ -83,14 +83,14 @@ node('kube-slave01') {
             currentBuild.result = 'SUCCESS'
         }
     } catch(err) {
-        stage('ERROR') {
+        // stage('ERROR') {
             echo 'There was some error!'
             // throw err
             currentBuild.result = 'FAILURE'
             // notifySlack.send currentBuild.result
             notify.send currentBuild.result
             throw err
-        }
+        // }
     } finally {
         // For POST handling
         echo "POST HANDLING!"
