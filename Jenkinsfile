@@ -84,7 +84,6 @@ node('kube-slave01') {
     } catch(err) {
         stage('ERROR') {
             echo 'There was some error!'
-            sh 'printenv'
             throw err
             currentBuild.result = 'FAILURE'
             notifySlack.send currentBuild.result
