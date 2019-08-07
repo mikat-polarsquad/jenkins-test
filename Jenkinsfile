@@ -75,10 +75,9 @@ node('kube-slave01') {
             stage('Verifying build') {
                 container('custom') {
                     sh "docker image ls ${IMAGE}"
-                    customImage.inside {
-                        sh 'whoami'
-                    }
-                    echo "${stageResult}"
+                    // customImage.inside {
+                    //     sh 'whoami'
+                    // }
 
                 }
             }
