@@ -1,4 +1,5 @@
-// #!/usr/bin/groovy
+#!/usr/bin/env groovy
+@Library('Utils')
 properties(
     [
         buildDiscarder(
@@ -18,23 +19,23 @@ node('kube-slave01') {
             stage('Init') {
                 container('custom') {
                     // script {
-                        git branch: 'testing-trigger', url: 'https://github.com/mikat-polarsquad/jenkins-test'
+                        git branch: env.BRANCH_NAME, url: 'https://github.com/mikat-polarsquad/jenkins-test'
                     // }
                 } // CONTAINER
             }
             stage('Preparations') {
                 container('custom') {
                     script {
-                        gitCommitHash=sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-                        shortCommitHash=gitCommitHash.take(7)
+                        gitCommitHash = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+                        shortCommitHash = gitCommitHash.take(7)
 
-                        COMMITTER_NAME=sh(returnStdout: true, script: 'git show -s --pretty=%an').trim()
-                        COMMIT_MESSAGE=sh(returnStdout: true, script: 'git log --format=%B -n 1 HEAD').trim()
+                        COMMITTER_NAME = sh(returnStdout: true, script: 'git show -s --pretty=%an').trim()
+                        COMMIT_MESSAGE = sh(returnStdout: true, script: 'git log --format=%B -n 1 HEAD').trim()
 
-                        VERSION=shortCommitHash
-                        UNIT_TEST_COMPOSE_PROJECT_NAME="$VERSION:UT"
-                        LIBRARY_TEST_COMPOSE_PROJECT_NAME="$VERSION:LIB"
-                        IMAGE="$IMGREPO/$PROJECT:$VERSION"
+                        VERSION = shortCommitHash
+                        UNIT_TEST_COMPOSE_PROJECT_NAME = "$VERSION:UT"
+                        LIBRARY_TEST_COMPOSE_PROJECT_NAME = "$VERSION:LIB"
+                        IMAGE = "$IMGREPO/$PROJECT:$VERSION"
                         echo "${IMAGE}"
                     }
                 }
@@ -77,20 +78,16 @@ node('kube-slave01') {
                     }
                 }
             }
-            // } else {
-            //     stage('Devving') {
-            //         container('custom') {
-            //             echo "${env.BRANCH_NAME}"
-            //         }
-            //     }
-            // }
+
+            currentBuild.result = 'SUCCESS'
         }
-    } catch(e) {
+    } catch(err) {
         stage('ERROR') {
             echo 'There was some error!'
             sh 'printenv'
-            throw e
-            currentBuild.currentResult = 'FAILURE'
+            throw err
+            currentBuild.result = 'FAILURE'
+            notifySlack.send currentBuild.result
         }
     } finally {
         // For POST handling
@@ -98,12 +95,12 @@ node('kube-slave01') {
         // sh 'printenv'
         def currentResult = currentBuild.result ?: 'SUCCESS'
         // echo "${currentResult}"
-        
+
         echo "${currentBuild.getCurrentResult()}"
         if (currentBuild.resultIsBetterOrEqualTo('SUCCESS')) {
             echo "Previous build failed ${currentBuild?.getPreviousBuild()?.number} and now it has been fixed"
         }
-            
+
         if (currentResult == 'SUCCESS') {
             stage('Success') {
                 echo 'Build has succeeded!'
