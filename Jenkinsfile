@@ -111,25 +111,25 @@ node('kube-slave01') {
         // }
 
 
-        if (currentResult == 'SUCCESS') {
+        if (currentBuild.result == 'SUCCESS') {
             stage('Success') {
                 echo 'Build has succeeded!'
                 notifier.notifyResult()
             }
         }
-        if (currentResult == 'UNSTABLE') {
+        if (currentBuild.result == 'UNSTABLE') {
             stage('Unstable') {
                 echo 'Build is UNSTABLE!'
                 notifier.notifyResult()
             }
         }
-        if (currentResult == 'FAILURE') {
+        if (currentBuild.result == 'FAILURE') {
             stage('Failure') {
                 echo 'Build has FAILED!'
                 notifier.notifyResult()
             }
         }
-    }
+    } // Finally END
 } // STAGES
     // }
 // }
