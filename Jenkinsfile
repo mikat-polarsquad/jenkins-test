@@ -70,6 +70,8 @@ node('kube-slave01') {
                     customImage.inside {
                         sh 'whoami'
                     }
+                    echo "${stageResult}"
+
                 }
             }
             if (env.BRANCH_NAME == 'master') {
@@ -85,6 +87,7 @@ node('kube-slave01') {
     } catch(err) {
         // stage('ERROR') {
             echo 'There was some error!'
+            echo "${buildResult}"
             // throw err
             currentBuild.result = 'FAILURE'
             // notifySlack.send currentBuild.result
