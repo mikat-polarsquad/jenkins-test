@@ -1,5 +1,5 @@
-#!/usr/bin/env groovy
-@Library('Utils') _
+// #!/usr/bin/env groovy
+@Library('Utils') import org.sharkpunch.jenkins.slack
 // @Library('Utils') import org.sharkpunch.jenkins.notifySlack
 properties(
     [
@@ -11,15 +11,22 @@ properties(
         )
     ]
 )
-// def IMAGE
+def notifier = new org.gradiant.jenkins.slack.SlackNotifier()
 
 node('kube-slave01') {
     try {
+      env.SLACK_CHANNEL = 'jenkins-testing'
+      env.SLACK_DOMAIN  = 'matchmade.slack.com'
+      // env.SLACK_CREDENTIALS = 'jenkins-slack-credentials-id'
+      env.CHANGE_LIST = 'true'
+      // env.TEST_SUMMARY = 'true'
+
         withEnv(['PROJECT=jenkins-testings',
                     'IMGREPO=psmikat']) {
             stage('Init') {
                 container('custom') {
                     // script {
+                        notifier.notifyStart()
                         git branch: 'testing-trigger', url: 'https://github.com/mikat-polarsquad/jenkins-test'
                     // }
                 } // CONTAINER
@@ -87,7 +94,6 @@ node('kube-slave01') {
     } catch(err) {
         // stage('ERROR') {
             echo 'There was some error!'
-            echo "${buildResult}"
             // throw err
             currentBuild.result = 'FAILURE'
             // notifySlack.send currentBuild.result
