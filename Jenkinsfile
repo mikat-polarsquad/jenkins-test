@@ -25,15 +25,15 @@ node('kube-slave01') {
         withEnv(['PROJECT=jenkins-testings',
                     'IMGREPO=psmikat']) {
             stage('Init') {
-                container('custom') {
+                // container('custom') {
                     // script {
                         notifier.notifyStart()
                         git branch: 'testing-trigger', url: 'https://github.com/mikat-polarsquad/jenkins-test'
                     // }
-                } // CONTAINER
+                // } // CONTAINER
             }
             stage('Preparations') {
-                container('custom') {
+                // container('custom') {
                     script {
                         gitCommitHash = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
                         shortCommitHash = gitCommitHash.take(7)
@@ -47,17 +47,17 @@ node('kube-slave01') {
                         IMAGE = "$IMGREPO/$PROJECT:$VERSION"
                         echo "${IMAGE}"
                     }
-                }
+                // } // container END
             }
             stage('Building') {
-                container('custom') {
+                // container('custom') {
                     // sh 'docker build -t "${IMAGE}" .'
                     customImage = docker.build("${IMAGE}", "--network host .")
                     echo "${customImage}"
-                }
+                // } // container END
             }
             stage('Parallel') {
-                container('custom') {
+                // container('custom') {
                     parallel 'Verifying': {
                         stage('Verify image') {
                             sh "docker image ls ${IMAGE}"
@@ -67,22 +67,22 @@ node('kube-slave01') {
                             echo "Custom image is built!"
                         }
                     }
-                }
+                // } // container END
             }
             stage('Verifying build') {
-                container('custom') {
+                // container('custom') {
                     sh "docker image ls ${IMAGE}"
                     // customImage.inside {
                     //     sh 'whoami'
                     // }
 
-                }
+                // } // container END
             }
             if (env.BRANCH_NAME == 'master') {
                 stage('Deploying') {
-                    container('custom') {
+                    // container('custom') {
                         echo "Its MASTER"
-                    }
+                    // } // container END
                 }
             }
 
