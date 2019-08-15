@@ -29,6 +29,7 @@ spec:
     }
     stage('Build Docker image') {
       git 'https://github.com/jenkinsci/docker-jnlp-slave.git'
+      sh 'sleep 60'
       container('docker') {
         sh "docker build -t ${image} ."
       }
