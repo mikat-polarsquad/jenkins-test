@@ -22,7 +22,7 @@ spec:
   ) {
 
   def image = "jenkins/jnlp-slave"
-  node('kube-slave01') {
+  node(POD_LABEL) {
     stage("Init"){
         echo "Initializing build"
         git branch: 'testing-trigger', url: 'https://github.com/mikat-polarsquad/jenkins-test'
