@@ -58,7 +58,7 @@ node('kube-slave01') {
                   sh "docker inspect ${c.id}""
                   docker.image('mysql:5').inside("-v /var/run/docker.sock:/var/run/docker.sock --link ${c.id}:db") {
                       /* Wait until mysql service is up */
-                      sh "docker inspect ${c.id}""
+                      sh "docker inspect ${c.id}"
                       sh 'sleep 10'
                       sh "while ! mysqladmin ping -hdb --silent; do sleep 1; done"
                   }
