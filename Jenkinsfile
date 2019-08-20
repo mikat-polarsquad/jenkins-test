@@ -66,28 +66,28 @@ node('kube-slave01') {
                   sh "docker inspect ${c.id}"
                   sh "sleep 10"
                   sh "docker exec -t ${c.id} mysqladmin ping -h localhost"
-                  docker.image('mysql:5.6').withRun("-v /var/run/docker.sock:/var/run/docker.sock --link ${c.id}:db") {
+                  docker.image('mysql:5').inside("-v /var/run/docker.sock:/var/run/docker.sock --link ${c.id}:db") {
                       /* Wait until mysql service is up */
-                      containerId = c.id
-                      sh "docker inspect ${c.id}"
-                      def container = sh "docker exec -t ${c.id} hostname"
-                      sh "printenv"
+                      // containerId = c.id
+                      // sh "docker inspect ${c.id}"
+                      // def container = sh "docker exec -t ${c.id} hostname"
+                      // sh "printenv"
                       // waitForMSQL(c.id)
                       sh 'sleep 60'
-                      sh "docker exec -t ${container} mysqladmin ping -hdb"
+                      // sh "docker exec -t ${container} mysqladmin ping -hdb"
                       def isItReady = sh (
                                     script: "while ! /usr/bin/mysqladmin ping -hdb --silent; do sleep 1; done",
                                     returnStdout: true
                                   )
                       echo "${isItReady}"
                   }
-                  // docker.image('centos:7').inside("--link ${c.id}:db") {
-                  //     /*
-                  //     * Run some tests which require MySQL, and assume that it is
-                  //     * available on the host name `db`
-                  //     */
-                  //     sh 'make check'
-                  // }
+                  docker.image('centos:7').inside("--link ${c.id}:db") {
+                      /*
+                      * Run some tests which require MySQL, and assume that it is
+                      * available on the host name `db`
+                      */
+                      sh 'yum install -y mysql'
+                  }
                 }
               }
             }
