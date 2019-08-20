@@ -54,11 +54,12 @@ node('kube-slave01') {
                 docker.image('mysql:5').withRun("-v /var/run/docker.sock:/var/run/docker.sock -e MYSQL_ROOT_PASSWORD=my-secret-pw") { c ->
                   // sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
                   sh 'sleep 10'
-                  sh "docker exec -t ${c.id} mysqladmin ping -hdb"
+                  waitForMSQL(c.id)
                   sh "docker inspect ${c.id}"
                   docker.image('mysql:5').inside("-v /var/run/docker.sock:/var/run/docker.sock --link ${c.id}:db") {
                       /* Wait until mysql service is up */
                       sh "docker inspect ${c.id}"
+                      waitForMSQL(c.id)
                       sh 'sleep 10'
                       sh "while ! mysqladmin ping -hdb --silent; do sleep 1; done"
                   }
@@ -146,3 +147,20 @@ node('kube-slave01') {
 } // STAGES
     // }
 // }
+
+def waitForMSQL(id) {
+  for (int i = 0; i < 30; i++) {
+    sleep 1
+    def isReady = sh (
+      script: "docker exec -t ${id} mysqladmin ping -hdb --silent",
+      returnStdout: true
+    )
+    echo "is ready = ${isReady}"
+    if (isReady.contains("mysqld is alive")) {
+      sleep 2
+      return
+    }
+  }
+  sh "docker logs ${id}"
+  throw new Exception('MySQL not running')
+}
