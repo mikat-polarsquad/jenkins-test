@@ -64,14 +64,17 @@ node('kube-slave01') {
                   //                 )
                   // echo "${isReady}"
                   sh "docker inspect ${c.id}"
-                  sh "sleep 60"
+                  sh "docker exec -t ${c.id} mysqladmin ping -hlocalhost"
+                  sh "sleep 10"
                   docker.image('mysql:5.6').withRun("-v /var/run/docker.sock:/var/run/docker.sock --link ${c.id}:db") {
                       /* Wait until mysql service is up */
                       containerId = c.id
                       sh "docker inspect ${c.id}"
-                      sh "docker exec -t ${c.id} hostname"
+                      def container = sh "docker exec -t ${c.id} hostname"
+                      sh "printenv"
                       // waitForMSQL(c.id)
-                      sh 'sleep 10'
+                      sh 'sleep 60'
+                      sh "docker exec -t ${container} mysqladmin ping -hdb"
                       def isItReady = sh (
                                     script: "while ! /usr/bin/mysqladmin ping -hdb --silent; do sleep 1; done",
                                     returnStdout: true
