@@ -69,6 +69,7 @@ node('kube-slave01') {
                   docker.image('mysql:5').withRun("-v /var/run/docker.sock:/var/run/docker.sock --link ${c.id}:db") { d ->
                       /* Wait until mysql service is up */
                       // containerId = c.id
+                      sh "sleep 60"
                       // sh "docker inspect ${c.id}"
                       // def container = sh "docker exec -t ${c.id} hostname"
                       // sh "printenv"
@@ -83,13 +84,13 @@ node('kube-slave01') {
                       //             )
                       // echo "${isItReady}"
                   }
-                  docker.image('centos:7').inside("--link ${c.id}:db") {
-                      /*
-                      * Run some tests which require MySQL, and assume that it is
-                      * available on the host name `db`
-                      */
-                      sh 'yum install -y mysql'
-                  }
+                  // docker.image('centos:7').inside("--link ${c.id}:db") {
+                  //     /*
+                  //     * Run some tests which require MySQL, and assume that it is
+                  //     * available on the host name `db`
+                  //     */
+                  //     sh 'yum install -y mysql'
+                  // }
                 }
               }
             }
