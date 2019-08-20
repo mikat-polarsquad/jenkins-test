@@ -53,7 +53,6 @@ node('kube-slave01') {
               container('custom') {
                 docker.image('mysql:5.6').withRun("-v /var/run/docker.sock:/var/run/docker.sock -e MYSQL_ROOT_PASSWORD=my-secret-pw") { c ->
                   // sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
-                  sh "ps -A"
                   sh 'sleep 10'
                   // waitForMSQL(c.id)
                   sh "docker logs ${c.id}"
