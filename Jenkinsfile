@@ -74,7 +74,7 @@ node('kube-slave01') {
                       // sh "printenv"
                       // waitForMSQL(c.id)
                       sh 'sleep 60'
-                      sh "docker exec -t mysql:5 mysqladmin ping -hdb"
+                      // sh "docker exec -t mysql:5 mysqladmin ping -hdb"
                       def isItReady = sh (
                                     script: "while ! /usr/bin/mysqladmin ping -hdb --silent; do sleep 1; done",
                                     returnStdout: true
