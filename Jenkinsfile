@@ -72,9 +72,11 @@ node('kube-slave01') {
                       // sh "docker inspect ${c.id}"
                       // def container = sh "docker exec -t ${c.id} hostname"
                       // sh "printenv"
-                      sh "docker exec -t ${d.id} hostname"
+                      def sidecarId = sh(
+                          script: "docker ps -q --filter ancestor=mysql:5",
+                          returnStdout: true )
+                      sh "docker exec -t ${sidecarId} mysqladmin ping -hdb"
                       sh 'sleep 60'
-                      sh "docker exec -t ${d.id} mysqladmin ping -hdb"
                       // def isItReady = sh (
                       //               script: "while ! /usr/bin/mysqladmin ping -hdb --silent; do sleep 1; done",
                       //               returnStdout: true
