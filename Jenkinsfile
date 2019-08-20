@@ -152,7 +152,7 @@ def waitForMSQL(id) {
   for (int i = 0; i < 30; i++) {
     sleep 1
     def isReady = sh (
-      script: "docker exec -t ${id} mysqladmin ping -hdb --silent",
+      script: "docker exec -t ${id} mysqladmin ping -hdb",
       returnStdout: true
     )
     echo "is ready = ${isReady}"
