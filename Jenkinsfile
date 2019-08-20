@@ -51,18 +51,20 @@ node('kube-slave01') {
             }
             stage('Docker sidecar') {
               container('custom') {
-                docker.image('mysql:5').withRun("-v /var/run/docker.sock:/var/run/docker.sock -e MYSQL_ROOT_PASSWORD=my-secret-pw") { c ->
+                docker.image('mysql:5.6').withRun("-v /var/run/docker.sock:/var/run/docker.sock -e MYSQL_ROOT_PASSWORD=my-secret-pw") { c ->
                   // sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
                   sh 'sleep 10'
                   // waitForMSQL(c.id)
-                  def isReady = sh (
-                                    script: "while ! mysqladmin ping -hdb --silent; do sleep 1; done",
-                                    returnStdout: true
-                                  )
-                  echo "${isReady}"
+                  sh "docker logs ${c.id}"
+                  // def isReady = sh (
+                  //                   script: "while ! mysqladmin ping -hdb --silent; do sleep 1; done",
+                  //                   returnStdout: true
+                  //                 )
+                  // echo "${isReady}"
                   sh "docker inspect ${c.id}"
-                  docker.image('mysql:5').inside("-v /var/run/docker.sock:/var/run/docker.sock --link ${c.id}:db") {
+                  docker.image('mysql:5.6').withRun("-v /var/run/docker.sock:/var/run/docker.sock --link ${c.id}:db") {
                       /* Wait until mysql service is up */
+                      containerId = c.id
                       sh "docker inspect ${c.id}"
                       waitForMSQL(c.id)
                       sh 'sleep 10'
@@ -124,6 +126,7 @@ node('kube-slave01') {
     } catch(err) {
         // DONT PUT INSIDE STAGE. THEN IT WILL BE SHOWN AS IT'S OWN STAGE ON PIPELINE VISUAL!
             echo 'There was some error!'
+            sh "docker logs ${containerId}"
 
             currentBuild.result = 'FAILURE'
             notifier.notifyError(err)
