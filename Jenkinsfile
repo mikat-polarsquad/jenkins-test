@@ -66,7 +66,7 @@ node('kube-slave01') {
                   sh "docker inspect ${c.id}"
                   sh "sleep 10"
                   sh "docker exec -t ${c.id} mysqladmin ping -h localhost"
-                  docker.image('mysql:5').inside("-v /var/run/docker.sock:/var/run/docker.sock --link ${c.id}:db") {
+                  docker.image('mysql:5').withRun("--link ${c.id}:db") {
                       /* Wait until mysql service is up */
                       // containerId = c.id
                       // sh "docker inspect ${c.id}"
@@ -74,7 +74,7 @@ node('kube-slave01') {
                       // sh "printenv"
                       // waitForMSQL(c.id)
                       sh 'sleep 60'
-                      // sh "docker exec -t ${container} mysqladmin ping -hdb"
+                      sh "docker exec -t mysql:5 mysqladmin ping -hdb"
                       def isItReady = sh (
                                     script: "while ! /usr/bin/mysqladmin ping -hdb --silent; do sleep 1; done",
                                     returnStdout: true
@@ -133,7 +133,11 @@ node('kube-slave01') {
     } catch(err) {
         // DONT PUT INSIDE STAGE. THEN IT WILL BE SHOWN AS IT'S OWN STAGE ON PIPELINE VISUAL!
             echo 'There was some error!'
-            sh "docker logs ${containerId}"
+            stage('catch') {
+              container('custom') {
+                sh "docker logs ${containerId}"
+              }
+            }
 
             currentBuild.result = 'FAILURE'
             notifier.notifyError(err)
