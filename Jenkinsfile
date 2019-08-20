@@ -53,15 +53,18 @@ node('kube-slave01') {
               container('custom') {
                 docker.image('mysql:5.6').withRun("-v /var/run/docker.sock:/var/run/docker.sock -e MYSQL_ROOT_PASSWORD=my-secret-pw") { c ->
                   // sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
-                  sh 'sleep 10'
+                  // sh 'sleep 10'
+                  sh "printenv"
+                  sh "hostname"
                   // waitForMSQL(c.id)
                   sh "docker logs ${c.id}"
-                  def isReady = sh (
-                                    script: "while ! /usr/bin/mysqladmin ping -hdb --silent; do sleep 1; done",
-                                    returnStdout: true
-                                  )
-                  echo "${isReady}"
+                  // def isReady = sh (
+                  //                   script: "while ! /usr/bin/mysqladmin ping -hdb --silent; do sleep 1; done",
+                  //                   returnStdout: true
+                  //                 )
+                  // echo "${isReady}"
                   sh "docker inspect ${c.id}"
+                  sh "sleep 60"
                   docker.image('mysql:5.6').withRun("-v /var/run/docker.sock:/var/run/docker.sock --link ${c.id}:db") {
                       /* Wait until mysql service is up */
                       containerId = c.id
