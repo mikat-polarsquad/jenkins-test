@@ -51,9 +51,10 @@ node('kube-slave01') {
             }
             stage('Docker sidecar') {
               container('custom') {
-                docker.image('mysql:5').withRun('-e "MYSQL_ROOT_PASSWORD=my-secret-pw"') { c ->
-                  sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
-                  docker.image('mysql:5').withRun("--link ${c.id}:db") {
+                docker.image('mysql:5').withRun('-v /var/run/docker.sock:/var/run/docker.sock -e "MYSQL_ROOT_PASSWORD=my-secret-pw"') { c ->
+                  // sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
+                  sh 'docker exec -t ${c.id} while ! mysqladmin ping -hdb --silent; do sleep 1; done'
+                  docker.image('mysql:5').inside("--link ${c.id}:db") {
                       /* Wait until mysql service is up */
                       sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
                   }
