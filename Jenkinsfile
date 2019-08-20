@@ -50,7 +50,7 @@ node('kube-slave01') {
                 }
             }
             stage('Docker sidecar') {
-              container('custom') {
+              // container('custom') {
                 docker.image('mysql:5.6').withRun("-v /var/run/docker.sock:/var/run/docker.sock -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_DATABASE=test") { c ->
                   // sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
                   // sh 'sleep 10'
@@ -91,8 +91,9 @@ node('kube-slave01') {
                   //     */
                   //     sh 'yum install -y mysql'
                   // }
-                }
-              }
+                } // docker.withRun END
+
+              // } // Container END
             }
             // stage('Building') {
             //     container('custom') {
