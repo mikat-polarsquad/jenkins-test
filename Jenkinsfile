@@ -23,9 +23,9 @@ podTemplate(
       ttyEnabled: true,
       // command: 'cat',
       envVars: [
-        // envVar(key: 'MYSQL_DATABASE', value: databaseName),
-        // envVar(key: 'MYSQL_USER', value: databaseUsername),
-        // envVar(key: 'MYSQL_PASSWORD', value: databasePassword),
+        envVar(key: 'MYSQL_DATABASE', value: databaseName),
+        envVar(key: 'MYSQL_USER', value: databaseUsername),
+        envVar(key: 'MYSQL_PASSWORD', value: databasePassword),
         envVar(key: 'MYSQL_ALLOW_EMPTY_PASSWORD', value: "yes")
         // envVar(key: 'MYSQL_ROOT_PASSWORD', value: "kurko")
       ]),
@@ -33,12 +33,12 @@ podTemplate(
       name: 'mariadb',
       image: 'mariadb',
       ttyEnabled: true,
-      command: 'cat',
+      // command: 'cat',
       envVars: [
         envVar(key: 'DB_NAME', value: databaseName),
         envVar(key: 'DB_USER', value: databaseUsername),
         envVar(key: 'DB_PASSWORD', value: databasePassword),
-        envVar(key: 'DB_ROOT_PASSWORD', value: "kurko")
+        // envVar(key: 'DB_ROOT_PASSWORD', value: "kurko")
         ]),
       ],
       volumes: [
@@ -60,28 +60,40 @@ podTemplate(
       }
 
 
-      stage('Get a Maven project') {
-          git 'https://github.com/jenkinsci/kubernetes-plugin.git'
-          container('maven') {
-              stage('Build a Maven project') {
-                  sh 'mvn -B clean install'
-              }
-          }
+      stage('MariaDB Connect') {
+        container('mariadb') {
+          echo "Testing database connection"
+          def isItReady = sh (
+                        script: "while ! /usr/bin/mysqladmin ping -h localhost -u ${databaseUsername} -p ${databasePassword} --silent; do sleep 1; done",
+                        returnStdout: true
+                      )
+          echo "${isItReady}"
+        }
       }
 
 
-      stage('Get a Golang project') {
-          git url: 'https://github.com/hashicorp/terraform.git'
-          container('golang') {
-              stage('Build a Go project') {
-                  sh """
-                  mkdir -p /go/src/github.com/hashicorp
-                  ln -s `pwd` /go/src/github.com/hashicorp/terraform
-                  cd /go/src/github.com/hashicorp/terraform && make core-dev
-                  """
-              }
-          }
-      }
+      // stage('Get a Maven project') {
+      //     git 'https://github.com/jenkinsci/kubernetes-plugin.git'
+      //     container('maven') {
+      //         stage('Build a Maven project') {
+      //             sh 'mvn -B clean install'
+      //         }
+      //     }
+      // }
+
+
+      // stage('Get a Golang project') {
+      //     git url: 'https://github.com/hashicorp/terraform.git'
+      //     container('golang') {
+      //         stage('Build a Go project') {
+      //             sh """
+      //             mkdir -p /go/src/github.com/hashicorp
+      //             ln -s `pwd` /go/src/github.com/hashicorp/terraform
+      //             cd /go/src/github.com/hashicorp/terraform && make core-dev
+      //             """
+      //         }
+      //     }
+      // }
 
 
     }
