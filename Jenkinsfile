@@ -60,16 +60,16 @@ podTemplate(
       }
 
 
-      stage('MariaDB Connect') {
-        container('mariadb') {
-          echo "Testing database connection"
-          def isItReady = sh (
-                        script: "while ! /usr/bin/mysqladmin ping -h localhost -u ${databaseUsername} -p ${databasePassword} --silent; do sleep 1; done",
-                        returnStdout: true
-                      )
-          echo "${isItReady}"
-        }
-      }
+      // stage('MariaDB Connect') {
+      //   container('mariadb') {
+      //     echo "Testing database connection"
+      //     def isItReady = sh (
+      //                   script: "while ! /usr/bin/mysqladmin ping -h localhost -u ${databaseUsername} -p ${databasePassword} --silent; do sleep 1; done",
+      //                   returnStdout: true
+      //                 )
+      //     echo "${isItReady}"
+      //   }
+      // }
 
 
       // stage('Get a Maven project') {
