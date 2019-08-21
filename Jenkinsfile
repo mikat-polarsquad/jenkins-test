@@ -33,7 +33,7 @@ podTemplate(
       name: 'mariadb',
       image: 'mariadb',
       ttyEnabled: true,
-      // command: 'cat',
+      command: 'cat',
       envVars: [
         envVar(key: 'DB_NAME', value: databaseName),
         envVar(key: 'DB_USER', value: databaseUsername),
@@ -58,20 +58,6 @@ podTemplate(
           echo "${isItReady}"
         }
       }
-      
-      
-      // stage('DB Conn') {
-      //   container('mariadb') {
-      //     sh "printenv"
-      //     sh "hostname"
-      //     sh "sleep 10"
-      //     def isItReady = sh (
-      //                   script: "while ! /usr/bin/mysqladmin ping -hlocalhost -u $DB_USER -p $DB_PASSWORD --silent; do sleep 1; done",
-      //                   returnStdout: true
-      //                 )
-      //     echo "${isItReady}"
-      //   }
-      // }
 
 
       stage('Get a Maven project') {
