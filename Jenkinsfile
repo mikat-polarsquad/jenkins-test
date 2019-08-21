@@ -44,24 +44,6 @@ podTemplate(
   label: 'kube-podi',
   cloud: 'kubernetes', //This needs to match the cloud name in jenkins-kubernetes-plugin config
   containers: [
-    //Jenkins agent. Also executes the integration test. Having a 'jnlp' container is mandatory.
-    // containerTemplate(name: 'jnlp',
-    //                   image: 'registry.access.redhat.com/openshift3/jenkins-slave-maven-rhel7:v3.9',
-    //                   resourceLimitMemory: '512Mi',
-    //                   args: '${computer.jnlpmac} ${computer.name}',
-    //                   envVars: [
-    //                     //Heap for mvn and surefire process is 1/4 of resourceLimitMemory by default
-    //                     envVar(key: 'JNLP_MAX_HEAP_UPPER_BOUND_MB', value: '64')
-    //                   ]),
-    // //App under test
-    // containerTemplate(name: 'app-users',
-    //                   image: '172.30.1.1:5000/myproject/app-users:latest',
-    //                   resourceLimitMemory: '512Mi',
-    //                   envVars: [
-    //                     envVar(key: 'SPRING_PROFILES_ACTIVE', value: 'k8sit'),
-    //                     envVar(key: 'SPRING_CLOUD_KUBERNETES_ENABLED', value: 'false')
-    //                   ]),
-    //DB
     containerTemplate(name: 'mariadb',
                       image: 'mariadb',
                       resourceLimitMemory: '256Mi',
