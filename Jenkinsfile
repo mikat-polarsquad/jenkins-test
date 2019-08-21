@@ -33,7 +33,7 @@ podTemplate(
       name: 'mariadb',
       image: 'mariadb',
       ttyEnabled: true,
-      command: 'cat',
+      // command: 'cat',
       envVars: [
         envVar(key: 'DB_NAME', value: databaseName),
         envVar(key: 'DB_USER', value: databaseUsername),
@@ -59,6 +59,18 @@ podTemplate(
         }
       }
 
+
+      stage('mariadb') {
+        container('mariadb') {
+          sh "printenv"
+          sh "sleep 10"
+          def ready = sh (
+                        script: "while ! /usr/bin/mysqladmin ping -hlocalhost --silent; do sleep 1; done",
+                        returnStdout: true
+                      )
+          echo "${ready}"
+        }
+      }
 
       stage('Get a Maven project') {
           git 'https://github.com/jenkinsci/kubernetes-plugin.git'
