@@ -18,8 +18,8 @@ podTemplate(
       ttyEnabled: true,
       command: 'cat'),
     containerTemplate(
-      name: 'mariadb',
-      image: 'mariadb',
+      name: 'mysql',
+      image: 'mysql:5',
       ttyEnabled: true,
       command: 'cat',
       envVars: [
@@ -29,26 +29,26 @@ podTemplate(
         envVar(key: 'MYSQL_ROOT_PASSWORD', value: "kurko")
       ]),
     containerTemplate(
-      name: 'mysql',
-      image: 'mysql:5.6',
+      name: 'mariadb',
+      image: 'mariadb',
       ttyEnabled: true,
       command: 'cat',
       envVars: [
-        envVar(key: 'MYSQL_DATABASE', value: databaseName),
-        envVar(key: 'MYSQL_USER', value: databaseUsername),
-        envVar(key: 'MYSQL_PASSWORD', value: databasePassword),
-        envVar(key: 'MYSQL_ROOT_PASSWORD', value: "kurko")
+        envVar(key: 'DB_NAME', value: databaseName),
+        envVar(key: 'DB_USER', value: databaseUsername),
+        envVar(key: 'DB_PASSWORD', value: databasePassword),
+        envVar(key: 'DB_ROOT_PASSWORD', value: "kurko")
       ])
   ]) {
 
     node(POD_LABEL) {
       stage('DB Init') {
-        container('mariadb') {
+        container('mysql') {
           sh "printenv"
           sh "hostname"
-          sh "sleep 60"
+          sh "sleep 10"
           def isItReady = sh (
-                        script: "while ! /usr/bin/mysqladmin ping -hdb --silent; do sleep 1; done",
+                        script: "while ! /usr/bin/mysqladmin ping -hlocalhost --silent; do sleep 1; done",
                         returnStdout: true
                       )
           echo "${isItReady}"
