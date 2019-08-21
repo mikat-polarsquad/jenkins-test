@@ -71,6 +71,8 @@ podTemplate(
                       )
           echo "${ready}"
         }
+        containerLog 'mysql'
+        containerLog 'centos'
       }
 
       stage('Get a Maven project') {
