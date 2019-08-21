@@ -66,7 +66,7 @@ podTemplate(
           sh "yum install -y mysql"
           sh "sleep 10"
           def ready = sh (
-                        script: "while ! /usr/bin/mysqladmin ping -hlocalhost --silent; do sleep 1; done",
+                        script: "while ! /usr/bin/mysqladmin ping -h ${databaseHost} -u ${databaseUsername} --password=${databasePassword} --silent; do sleep 1; done",
                         returnStdout: true
                       )
           echo "${ready}"
