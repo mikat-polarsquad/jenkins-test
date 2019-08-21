@@ -10,13 +10,14 @@ def databaseHost = '127.0.0.1'
 
 podTemplate(
     cloud: "kubernetes",
+    label: "kube-podi",
     containers: [
-    containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat'),
-    containerTemplate(
-      name: 'golang',
-      image: 'golang:1.8.0',
-      ttyEnabled: true,
-      command: 'cat'),
+    // containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat'),
+    // containerTemplate(
+    //   name: 'golang',
+    //   image: 'golang:1.8.0',
+    //   ttyEnabled: true,
+    //   command: 'cat'),
     containerTemplate(
       name: 'mysql',
       image: 'mysql:5',
@@ -39,10 +40,14 @@ podTemplate(
         envVar(key: 'DB_USER', value: databaseUsername),
         envVar(key: 'DB_PASSWORD', value: databasePassword),
         envVar(key: 'DB_ROOT_PASSWORD', value: "kurko")
-      ])
+      ]),
+      volumes: [
+        hostPathVolume(mountPath: "/var/run/docker.sock", hostPath: "/var/run/docker.sock")
+      ]
   ]) {
 
-    node(POD_LABEL) {
+    // node(POD_LABEL) {
+    node("kube-podi") {
       stage('DB Init') {
         container('mysql') {
           sh "printenv"
