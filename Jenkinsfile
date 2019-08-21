@@ -50,7 +50,7 @@ podTemplate(
         container('mysql') {
           sh "printenv"
           sh "hostname"
-          sh "sleep 10"
+          // sh "sleep 10"
           def isItReady = sh (
                         script: "while ! /usr/bin/mysqladmin ping -hlocalhost --silent; do sleep 1; done",
                         returnStdout: true
@@ -64,7 +64,7 @@ podTemplate(
         container('centos') {
           sh "printenv"
           sh "yum install -y mysql"
-          sh "sleep 10"
+          // sh "sleep 10"
           def ready = sh (
                         script: "while ! /usr/bin/mysqladmin ping -h ${databaseHost} -u ${databaseUsername} --password=${databasePassword} --silent; do sleep 1; done",
                         returnStdout: true
@@ -75,28 +75,28 @@ podTemplate(
         containerLog 'centos'
       }
 
-      stage('Get a Maven project') {
-          git 'https://github.com/jenkinsci/kubernetes-plugin.git'
-          container('maven') {
-              stage('Build a Maven project') {
-                  sh 'mvn -B clean install'
-              }
-          }
-      }
+      // stage('Get a Maven project') {
+      //     git 'https://github.com/jenkinsci/kubernetes-plugin.git'
+      //     container('maven') {
+      //         stage('Build a Maven project') {
+      //             sh 'mvn -B clean install'
+      //         }
+      //     }
+      // }
 
 
-      stage('Get a Golang project') {
-          git url: 'https://github.com/hashicorp/terraform.git'
-          container('golang') {
-              stage('Build a Go project') {
-                  sh """
-                  mkdir -p /go/src/github.com/hashicorp
-                  ln -s `pwd` /go/src/github.com/hashicorp/terraform
-                  cd /go/src/github.com/hashicorp/terraform && make core-dev
-                  """
-              }
-          }
-      }
+      // stage('Get a Golang project') {
+      //     git url: 'https://github.com/hashicorp/terraform.git'
+      //     container('golang') {
+      //         stage('Build a Go project') {
+      //             sh """
+      //             mkdir -p /go/src/github.com/hashicorp
+      //             ln -s `pwd` /go/src/github.com/hashicorp/terraform
+      //             cd /go/src/github.com/hashicorp/terraform && make core-dev
+      //             """
+      //         }
+      //     }
+      // }
 
 
     }
