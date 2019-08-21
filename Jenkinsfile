@@ -30,10 +30,10 @@ podTemplate(
         // envVar(key: 'MYSQL_ROOT_PASSWORD', value: "kurko")
       ]),
     containerTemplate(
-      name: 'mariadb',
-      image: 'mariadb',
+      name: 'centos',
+      image: 'centos',
       ttyEnabled: true,
-      // command: 'cat',
+      command: 'cat',
       envVars: [
         envVar(key: 'DB_NAME', value: databaseName),
         envVar(key: 'DB_USER', value: databaseUsername),
@@ -60,9 +60,10 @@ podTemplate(
       }
 
 
-      stage('mariadb') {
-        container('mariadb') {
+      stage('DB Conn') {
+        container('centos') {
           sh "printenv"
+          sh "yum install -y mysql"
           sh "sleep 10"
           def ready = sh (
                         script: "while ! /usr/bin/mysqladmin ping -hlocalhost --silent; do sleep 1; done",
