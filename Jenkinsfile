@@ -44,6 +44,9 @@ podTemplate(
     node(POD_LABEL) {
       stage('DB Init') {
         container('mariadb') {
+          sh "printenv"
+          sh "hostname"
+          sh "sleep 60"
           def isItReady = sh (
                         script: "while ! /usr/bin/mysqladmin ping -hdb --silent; do sleep 1; done",
                         returnStdout: true
