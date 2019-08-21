@@ -42,6 +42,17 @@ podTemplate(
   ]) {
 
     node(POD_LABEL) {
+      stage('DB Init') {
+        container('mariadb') {
+          def isItReady = sh (
+                        script: "while ! /usr/bin/mysqladmin ping -hdb --silent; do sleep 1; done",
+                        returnStdout: true
+                      )
+          echo "${isItReady}"
+        }
+      }
+
+
       stage('Get a Maven project') {
           git 'https://github.com/jenkinsci/kubernetes-plugin.git'
           container('maven') {
@@ -50,6 +61,7 @@ podTemplate(
               }
           }
       }
+
 
       stage('Get a Golang project') {
           git url: 'https://github.com/hashicorp/terraform.git'
@@ -64,15 +76,6 @@ podTemplate(
           }
       }
 
-      stage('DB Init') {
-        container('mariadb') {
-          def isItReady = sh (
-                        script: "while ! /usr/bin/mysqladmin ping -hdb --silent; do sleep 1; done",
-                        returnStdout: true
-                      )
-          echo "${isItReady}"
-        }
-      }
 
     }
 }
