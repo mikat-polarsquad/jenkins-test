@@ -12,6 +12,7 @@ podTemplate(
     cloud: 'kubernetes',
     nodeSelector: 'nodegroup:jenkins-slave',
     namespace: 'jenkins',
+    serviceAccount: 'sa-jenkins',
     containers: [
     // containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat'),
     // containerTemplate(
@@ -94,6 +95,14 @@ podTemplate(
       stage('Docker') {
         container('docker') {
           sh "printenv"
+          docker.image('centos').withRun("-e DB_HOST=${databaseHost}",
+                                          "-e DB_USER=${databaseUsername}",
+                                          "-e DB_PASSWORD=${databasePassword}") { c ->
+            sh "hostname"
+            sh "sleep 60"
+            sh "docker exec -t ${c.id} yum install -y mysql"
+            sh "docker exec -t ${c.id} mysqladmin ping -h $DB_HOST -u $DB_USER --password=$DB_PASSWORD"
+          }
           sh "docker ps"
           sh "sleep 80"
         }
