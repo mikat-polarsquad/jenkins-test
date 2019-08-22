@@ -103,7 +103,7 @@ podTemplate(
             sh "hostname"
             sh "sleep 60"
             sh "yum install -y mysql"
-            sh "mysqladmin ping -h $DB_HOST -u $DB_USER --password=$DB_PASSWORD"
+            sh "mysqladmin ping -h ${databaseHost} -u ${databaseUsername} --password=${databasePassword}"
           }
           sh "sleep 80"
         }
