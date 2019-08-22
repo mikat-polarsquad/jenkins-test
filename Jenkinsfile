@@ -95,15 +95,16 @@ podTemplate(
       stage('Docker') {
         container('docker') {
           sh "printenv"
-          docker.image('centos').inside("-e DB_HOST=${databaseHost}",
-                                          "-e DB_USER=${databaseUsername}",
-                                          "-e DB_PASSWORD=${databasePassword}") { c ->
+          sh "docker ps"
+          // docker.image('centos').inside("-e DB_HOST=${databaseHost}",
+          //                                 "-e DB_USER=${databaseUsername}",
+          //                                 "-e DB_PASSWORD=${databasePassword}") { c ->
+          docker.image('centos').inside {
             sh "hostname"
             sh "sleep 60"
             sh "docker exec -t ${c.id} yum install -y mysql"
             sh "docker exec -t ${c.id} mysqladmin ping -h $DB_HOST -u $DB_USER --password=$DB_PASSWORD"
           }
-          sh "docker ps"
           sh "sleep 80"
         }
         containerLog 'docker'
