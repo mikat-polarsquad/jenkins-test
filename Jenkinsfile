@@ -95,7 +95,7 @@ podTemplate(
       stage('Docker') {
         container('docker') {
           sh "printenv"
-          docker.image('centos').withRun("-e DB_HOST=${databaseHost}",
+          docker.image('centos').inside("-e DB_HOST=${databaseHost}",
                                           "-e DB_USER=${databaseUsername}",
                                           "-e DB_PASSWORD=${databasePassword}") { c ->
             sh "hostname"
