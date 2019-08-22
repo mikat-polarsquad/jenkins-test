@@ -93,7 +93,7 @@ podTemplate(
         container('docker') {
           sh "printenv"
           sh "docker ps"
-          // sh "sleep 10"
+          sh "sleep 80"
         }
         containerLog 'docker'
       }
