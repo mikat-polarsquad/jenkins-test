@@ -40,10 +40,12 @@ podTemplate(
         envVar(key: 'DB_PASSWORD', value: databasePassword),
         envVar(key: 'DB_ROOT_PASSWORD', value: "kurko")
         ]),
-      ],
-      volumes: [
-        hostPathVolume(mountPath: "/var/run/docker.sock", hostPath: "/var/run/docker.sock")
-      ]) {
+      ]
+      // ],
+      // volumes: [
+      //   hostPathVolume(mountPath: "/var/run/docker.sock", hostPath: "/var/run/docker.sock")
+      // ]
+      ) {
 
     node(POD_LABEL) {
       stage('DB Init') {
