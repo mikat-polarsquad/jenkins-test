@@ -65,7 +65,11 @@ podTemplate(
       stage('DB Init') {
         container('mysql') {
           sh "printenv"
-          sh "hostname"
+          DB_HOST = sh (
+                        script: "while ! /usr/bin/mysqladmin ping -hlocalhost --silent; do sleep 1; done",
+                        returnStdout: true
+                      )
+          echo "${DB_HOST}"
           // sh "sleep 10"
           def isItReady = sh (
                         script: "while ! /usr/bin/mysqladmin ping -hlocalhost --silent; do sleep 1; done",
@@ -101,9 +105,9 @@ podTemplate(
           //                                 "-e DB_PASSWORD=${databasePassword}") { c ->
           docker.image('centos').inside("--network host") {
             sh "hostname"
-            sh "sleep 60"
+            // sh "sleep 60"
             sh "yum install -y mysql"
-            sh "mysqladmin ping -h ${databaseHost} -u ${databaseUsername} --password=${databasePassword}"
+            sh "mysqladmin ping -h ${DB_HOST}"
           }
           sh "sleep 80"
         }
