@@ -39,8 +39,19 @@ podTemplate(
         envVar(key: 'DB_USER', value: databaseUsername),
         envVar(key: 'DB_PASSWORD', value: databasePassword),
         envVar(key: 'DB_ROOT_PASSWORD', value: "kurko")
-        ]),
-      ]
+      ]),
+    containerTemplate(
+      name: 'docker',
+      image: 'docker',
+      ttyEnabled: true,
+      command: 'cat',
+      envVars: [
+        envVar(key: 'DB_NAME', value: databaseName),
+        envVar(key: 'DB_USER', value: databaseUsername),
+        envVar(key: 'DB_PASSWORD', value: databasePassword),
+        envVar(key: 'DB_ROOT_PASSWORD', value: "kurko")
+      ]),
+      ] // Containers END
       // ],
       // volumes: [
       //   hostPathVolume(mountPath: "/var/run/docker.sock", hostPath: "/var/run/docker.sock")
@@ -75,6 +86,16 @@ podTemplate(
         }
         containerLog 'mysql'
         containerLog 'centos'
+      }
+      
+      
+      stage('Docker') {
+        container('docker') {
+          sh "printenv"
+          sh "docker ps"
+          // sh "sleep 10"
+        }
+        containerLog 'docker'
       }
 
       // stage('Get a Maven project') {
