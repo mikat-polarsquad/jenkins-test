@@ -66,7 +66,7 @@ podTemplate(
         container('mysql') {
           sh "printenv"
           DB_HOST = sh (
-                        script: "while ! /usr/bin/mysqladmin ping -hlocalhost --silent; do sleep 1; done",
+                        script: "hostname",
                         returnStdout: true
                       )
           echo "${DB_HOST}"
