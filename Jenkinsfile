@@ -9,7 +9,9 @@ def databaseHost = '127.0.0.1'
 // def jdbcUrl = "jdbc:mariadb://$databaseHost/$databaseName".toString()
 
 podTemplate(
-    cloud: "kubernetes",
+    cloud: 'kubernetes',
+    nodeSelector: 'nodegroup:jenkins-slave',
+    namespace: 'jenkins',
     containers: [
     // containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat'),
     // containerTemplate(
