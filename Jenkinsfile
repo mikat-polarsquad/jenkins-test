@@ -99,7 +99,7 @@ podTemplate(
           // docker.image('centos').inside("-e DB_HOST=${databaseHost}",
           //                                 "-e DB_USER=${databaseUsername}",
           //                                 "-e DB_PASSWORD=${databasePassword}") { c ->
-          docker.image('centos').inside {
+          docker.image('centos').inside("--network host") {
             sh "hostname"
             sh "sleep 60"
             sh "yum install -y mysql"
