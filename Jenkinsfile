@@ -1,12 +1,8 @@
 
-def label = "app-${UUID.randomUUID().toString()}".toString()
-
 def databaseUsername = 'mysql'
 def databasePassword = 'mysql'
 def databaseName = 'test'
 def databaseHost = '127.0.0.1'
-
-// def jdbcUrl = "jdbc:mariadb://$databaseHost/$databaseName".toString()
 
 podTemplate( cloud: 'kubernetes',
 yaml:"""
@@ -156,32 +152,8 @@ spec:
           }
           sh "sleep 80"
         }
-        containerLog 'docker'
+        containerLog 'mysql'
+        containerLog 'centos'
       }
-
-      // stage('Get a Maven project') {
-      //     git 'https://github.com/jenkinsci/kubernetes-plugin.git'
-      //     container('maven') {
-      //         stage('Build a Maven project') {
-      //             sh 'mvn -B clean install'
-      //         }
-      //     }
-      // }
-
-
-      // stage('Get a Golang project') {
-      //     git url: 'https://github.com/hashicorp/terraform.git'
-      //     container('golang') {
-      //         stage('Build a Go project') {
-      //             sh """
-      //             mkdir -p /go/src/github.com/hashicorp
-      //             ln -s `pwd` /go/src/github.com/hashicorp/terraform
-      //             cd /go/src/github.com/hashicorp/terraform && make core-dev
-      //             """
-      //         }
-      //     }
-      // }
-
-
     }
 }
