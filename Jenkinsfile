@@ -19,17 +19,6 @@ metadata:
 spec:
   serviceAccountName: sa-jenkins
   containers:
-  - name: docker
-    image: docker
-    tty: true
-    command: ['cat']
-    volumeMounts:
-    - name: dockersock
-      mountPath: /var/run/docker.sock
-    volumes:
-    - name: dockersock
-      hostPath:
-        path: /var/run/docker.sock
   - name: mysql
     image: mysql:5
     tty: true
@@ -42,6 +31,17 @@ spec:
         value: ${databasePassword}
       - name: MYSQL_ALLOW_EMPTY_PASSWORD
         value: yes
+  - name: docker
+    image: docker
+    tty: true
+    command: ['cat']
+    volumeMounts:
+    - name: dockersock
+      mountPath: /var/run/docker.sock
+  volumes:
+  - name: dockersock
+    hostPath:
+      path: /var/run/docker.sock
 """
     // cloud: 'kubernetes',
     // nodeSelector: 'nodegroup:jenkins-slave',
