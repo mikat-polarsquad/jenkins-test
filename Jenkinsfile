@@ -22,7 +22,6 @@ spec:
   containers:
   - name: mysql
     image: mysql:5
-    tty: true
     env:
       - name: MYSQL_DATABASE
         value: ${databaseName}
@@ -32,9 +31,17 @@ spec:
         value: ${databasePassword}
       - name: MYSQL_ALLOW_EMPTY_PASSWORD
         value: yes
+  - name: centos
+    image: centos
+    env:
+      - name: DB_NAME
+        value: ${databaseName}
+      - name: DB_USER
+        value: ${databaseUsername}
+      - name: DB_PASSWORD
+        value: ${databasePassword}
   - name: docker
     image: docker
-    tty: true
     command: ['cat']
     volumeMounts:
     - name: dockersock
@@ -75,8 +82,8 @@ spec:
     //   envVars: [
     //     envVar(key: 'DB_NAME', value: databaseName),
     //     envVar(key: 'DB_USER', value: databaseUsername),
-    //     envVar(key: 'DB_PASSWORD', value: databasePassword),
-    //     envVar(key: 'DB_ROOT_PASSWORD', value: "kurko")
+    //     envVar(key: 'DB_PASSWORD', value: databasePassword)
+    //     // envVar(key: 'DB_ROOT_PASSWORD', value: "kurko")
     //   ]),
     // containerTemplate(
     //   name: 'docker',
@@ -86,8 +93,8 @@ spec:
     //   envVars: [
     //     envVar(key: 'DB_NAME', value: databaseName),
     //     envVar(key: 'DB_USER', value: databaseUsername),
-    //     envVar(key: 'DB_PASSWORD', value: databasePassword),
-    //     envVar(key: 'DB_ROOT_PASSWORD', value: "kurko")
+    //     envVar(key: 'DB_PASSWORD', value: databasePassword)
+    //     // envVar(key: 'DB_ROOT_PASSWORD', value: "kurko")
     //   ]),
     //   // ] // Containers END
     //   ],
@@ -115,20 +122,20 @@ spec:
       }
 
 
-      // stage('DB Conn') {
-      //   container('centos') {
-      //     sh "printenv"
-      //     sh "yum install -y mysql"
-      //     // sh "sleep 10"
-      //     def ready = sh (
-      //                   script: "while ! /usr/bin/mysqladmin ping -h ${databaseHost} -u ${databaseUsername} --password=${databasePassword} --silent; do sleep 1; done",
-      //                   returnStdout: true
-      //                 )
-      //     echo "${ready}"
-      //   }
-      //   containerLog 'mysql'
-      //   containerLog 'centos'
-      // }
+      stage('DB Conn') {
+        container('centos') {
+          sh "printenv"
+          sh "yum install -y mysql"
+          // sh "sleep 10"
+          def ready = sh (
+                        script: "while ! /usr/bin/mysqladmin ping -h ${databaseHost} -u ${databaseUsername} --password=${databasePassword} --silent; do sleep 1; done",
+                        returnStdout: true
+                      )
+          echo "${ready}"
+        }
+        containerLog 'mysql'
+        containerLog 'centos'
+      }
       
       
       stage('Docker') {
