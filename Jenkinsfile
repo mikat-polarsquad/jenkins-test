@@ -33,6 +33,8 @@ spec:
         value: yes
   - name: centos
     image: centos
+    tty: true
+    command: ['cat']
     env:
       - name: DB_NAME
         value: ${databaseName}
@@ -42,6 +44,7 @@ spec:
         value: ${databasePassword}
   - name: docker
     image: docker
+    tty: true
     command: ['cat']
     volumeMounts:
     - name: dockersock
