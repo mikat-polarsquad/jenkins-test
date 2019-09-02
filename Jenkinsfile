@@ -133,7 +133,6 @@ spec:
           echo "${ready}"
         }
         containerLog 'mysql'
-        containerLog 'centos'
       }
       
       
