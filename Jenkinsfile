@@ -8,57 +8,91 @@ def databaseHost = '127.0.0.1'
 
 // def jdbcUrl = "jdbc:mariadb://$databaseHost/$databaseName".toString()
 
-podTemplate(
-    cloud: 'kubernetes',
-    nodeSelector: 'nodegroup:jenkins-slave',
-    namespace: 'jenkins',
-    serviceAccount: 'sa-jenkins',
-    containers: [
-    // containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat'),
+podTemplate(yaml:"""
+apiVersion: v1
+kind: Pod
+metadata:
+  name: jnlp-slave
+  namespace: jenkins
+  labels:
+    nodegroup: jenkins-slave
+spec:
+  serviceAccountName: sa-jenkins
+  containers:
+  - name: docker
+    image: docker
+    tty: true
+    command: ['cat']
+    volumeMounts:
+    - name: dockersock
+      mountPath: /var/run/docker.sock
+    volumes:
+    - name: dockersock
+      hostPath:
+        path: /var/run/docker.sock
+  - name: mysql
+    image: mysql:5
+    tty: true
+    env:
+      - name: MYSQL_DATABASE
+        value: ${databaseName}
+      - name: MYSQL_USER
+        value: ${databaseUsername}
+      - name: MYSQL_PASSWORD
+        value: ${databasePassword}
+      - name: MYSQL_ALLOW_EMPTY_PASSWORD
+        value: yes
+"""
+    // cloud: 'kubernetes',
+    // nodeSelector: 'nodegroup:jenkins-slave',
+    // namespace: 'jenkins',
+    // serviceAccount: 'sa-jenkins',
+    // containers: [
+    // // containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat'),
+    // // containerTemplate(
+    // //   name: 'golang',
+    // //   image: 'golang:1.8.0',
+    // //   ttyEnabled: true,
+    // //   command: 'cat'),
     // containerTemplate(
-    //   name: 'golang',
-    //   image: 'golang:1.8.0',
+    //   name: 'mysql',
+    //   image: 'mysql:5',
     //   ttyEnabled: true,
-    //   command: 'cat'),
-    containerTemplate(
-      name: 'mysql',
-      image: 'mysql:5',
-      ttyEnabled: true,
-      // command: 'cat',
-      envVars: [
-        envVar(key: 'MYSQL_DATABASE', value: databaseName),
-        envVar(key: 'MYSQL_USER', value: databaseUsername),
-        envVar(key: 'MYSQL_PASSWORD', value: databasePassword),
-        envVar(key: 'MYSQL_ALLOW_EMPTY_PASSWORD', value: "yes")
-        // envVar(key: 'MYSQL_ROOT_PASSWORD', value: "kurko")
-      ]),
-    containerTemplate(
-      name: 'centos',
-      image: 'centos',
-      ttyEnabled: true,
-      command: 'cat',
-      envVars: [
-        envVar(key: 'DB_NAME', value: databaseName),
-        envVar(key: 'DB_USER', value: databaseUsername),
-        envVar(key: 'DB_PASSWORD', value: databasePassword),
-        envVar(key: 'DB_ROOT_PASSWORD', value: "kurko")
-      ]),
-    containerTemplate(
-      name: 'docker',
-      image: 'docker',
-      ttyEnabled: true,
-      command: 'cat',
-      envVars: [
-        envVar(key: 'DB_NAME', value: databaseName),
-        envVar(key: 'DB_USER', value: databaseUsername),
-        envVar(key: 'DB_PASSWORD', value: databasePassword),
-        envVar(key: 'DB_ROOT_PASSWORD', value: "kurko")
-      ]),
-      // ] // Containers END
-      ],
-      volumes: [
-        hostPathVolume(mountPath: "/var/run/docker.sock", hostPath: "/var/run/docker.sock")
-      ]
+    //   // command: 'cat',
+    //   envVars: [
+    //     envVar(key: 'MYSQL_DATABASE', value: databaseName),
+    //     envVar(key: 'MYSQL_USER', value: databaseUsername),
+    //     envVar(key: 'MYSQL_PASSWORD', value: databasePassword),
+    //     envVar(key: 'MYSQL_ALLOW_EMPTY_PASSWORD', value: "yes")
+    //     // envVar(key: 'MYSQL_ROOT_PASSWORD', value: "kurko")
+    //   ]),
+    // containerTemplate(
+    //   name: 'centos',
+    //   image: 'centos',
+    //   ttyEnabled: true,
+    //   command: 'cat',
+    //   envVars: [
+    //     envVar(key: 'DB_NAME', value: databaseName),
+    //     envVar(key: 'DB_USER', value: databaseUsername),
+    //     envVar(key: 'DB_PASSWORD', value: databasePassword),
+    //     envVar(key: 'DB_ROOT_PASSWORD', value: "kurko")
+    //   ]),
+    // containerTemplate(
+    //   name: 'docker',
+    //   image: 'docker',
+    //   ttyEnabled: true,
+    //   command: 'cat',
+    //   envVars: [
+    //     envVar(key: 'DB_NAME', value: databaseName),
+    //     envVar(key: 'DB_USER', value: databaseUsername),
+    //     envVar(key: 'DB_PASSWORD', value: databasePassword),
+    //     envVar(key: 'DB_ROOT_PASSWORD', value: "kurko")
+    //   ]),
+    //   // ] // Containers END
+    //   ],
+    //   volumes: [
+    //     hostPathVolume(mountPath: "/var/run/docker.sock", hostPath: "/var/run/docker.sock")
+    //   ]
       ) {
 
     node(POD_LABEL) {
@@ -80,20 +114,20 @@ podTemplate(
       }
 
 
-      stage('DB Conn') {
-        container('centos') {
-          sh "printenv"
-          sh "yum install -y mysql"
-          // sh "sleep 10"
-          def ready = sh (
-                        script: "while ! /usr/bin/mysqladmin ping -h ${databaseHost} -u ${databaseUsername} --password=${databasePassword} --silent; do sleep 1; done",
-                        returnStdout: true
-                      )
-          echo "${ready}"
-        }
-        containerLog 'mysql'
-        containerLog 'centos'
-      }
+      // stage('DB Conn') {
+      //   container('centos') {
+      //     sh "printenv"
+      //     sh "yum install -y mysql"
+      //     // sh "sleep 10"
+      //     def ready = sh (
+      //                   script: "while ! /usr/bin/mysqladmin ping -h ${databaseHost} -u ${databaseUsername} --password=${databasePassword} --silent; do sleep 1; done",
+      //                   returnStdout: true
+      //                 )
+      //     echo "${ready}"
+      //   }
+      //   containerLog 'mysql'
+      //   containerLog 'centos'
+      // }
       
       
       stage('Docker') {
