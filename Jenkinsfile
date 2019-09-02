@@ -8,7 +8,8 @@ def databaseHost = '127.0.0.1'
 
 // def jdbcUrl = "jdbc:mariadb://$databaseHost/$databaseName".toString()
 
-podTemplate(yaml:"""
+podTemplate( cloud: 'kubernetes',
+yaml:"""
 apiVersion: v1
 kind: Pod
 metadata:
