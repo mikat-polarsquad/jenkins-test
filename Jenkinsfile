@@ -1,3 +1,5 @@
+@Library('Utils')
+def notifier = new org.sharkpunch.jenkins.slack.SlackNotifier()
 
 def databaseUsername = 'mysql'
 def databasePassword = 'mysql'
@@ -27,6 +29,13 @@ spec:
         value: ${databasePassword}
       - name: MYSQL_ALLOW_EMPTY_PASSWORD
         value: yes
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "500m"
+      limits:
+        memory: "1024Mi"
+        cpu: "1000m"
   - name: centos
     image: centos
     tty: true
@@ -38,6 +47,13 @@ spec:
         value: ${databaseUsername}
       - name: DB_PASSWORD
         value: ${databasePassword}
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "500m"
+      limits:
+        memory: "768Mi"
+        cpu: "1000m"
   - name: docker
     image: docker
     tty: true
@@ -45,6 +61,13 @@ spec:
     volumeMounts:
     - name: dockersock
       mountPath: /var/run/docker.sock
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "250m"
+      limits:
+        memory: "248Mi"
+        cpu: "500m"
   volumes:
   - name: dockersock
     hostPath:
